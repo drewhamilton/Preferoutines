@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.SendChannel
 
-@UseExperimental(FlowPreview::class)
+@FlowPreview
 internal abstract class CoroutinePreferenceListener<T> constructor(
     key: String,
     private val channel: SendChannel<T>

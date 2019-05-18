@@ -21,7 +21,8 @@ class Preferoutines(
         it.resume(preferences.getString(key, defaultValue))
     }
 
-    @UseExperimental(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    @FlowPreview
+    @ExperimentalCoroutinesApi
     fun getStringFlow(key: String, defaultValue: String?): Flow<String?> = flowViaChannel(CONFLATED) { channel ->
         channel.offer(preferences.getString(key, defaultValue))
 
