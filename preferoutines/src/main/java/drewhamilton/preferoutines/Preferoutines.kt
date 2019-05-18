@@ -23,12 +23,13 @@ class Preferoutines(
 
     @UseExperimental(FlowPreview::class, ExperimentalCoroutinesApi::class)
     fun getStringFlow(key: String, defaultValue: String?): Flow<String?> = flowViaChannel(CONFLATED) { channel ->
+        channel.offer(preferences.getString(key, defaultValue))
+
         val listener = CoroutinePreferenceChangeListener(key, channel, defaultValue, SharedPreferences::getString)
         preferences.registerOnSharedPreferenceChangeListener(listener)
         channel.invokeOnClose {
             preferences.unregisterOnSharedPreferenceChangeListener(listener)
         }
-        channel.offer(preferences.getString(key, defaultValue))
     }
 
     suspend fun getStringSet(key: String, defaultValue: Set<String>?): Set<String>? = suspendCoroutine {
