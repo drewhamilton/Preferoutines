@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.timeout
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -125,7 +126,7 @@ class PreferoutinesTest : FlowTest() {
     //region Flow functions
     @FlowPreview
     @Test
-    fun `getStringFlow emits starting value once`() {
+    fun `getStringFlow emits current value on collect`() {
         val testKey = "Test string key"
         val testValue = "Test value"
         val testDefault = "Test default"
@@ -163,6 +164,27 @@ class PreferoutinesTest : FlowTest() {
 
         verify(mockSharedPreferences, timeout(100).times(2)).getString(testKey, testDefault)
         testCollector.assert { valueCount(2) }
+    }
+
+    @FlowPreview
+    @Test
+    fun `getStringFlow unregisters listener on cancel`() {
+        val testKey = "Test string key"
+        val testValue = "Test value"
+        val testDefault = "Test default"
+        whenever(mockSharedPreferences.getString(testKey, testDefault)).thenReturn(testValue)
+
+        val testCollector = preferoutines.getStringFlow(testKey, testDefault).test()
+
+        val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
+        verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
+        verify(mockSharedPreferences).getString(testKey, testDefault)
+        verify(mockSharedPreferences, never()).unregisterOnSharedPreferenceChangeListener(any())
+
+        testCollector.assert { valueCount(1) }
+        testCollector.deferred.cancel()
+
+        verify(mockSharedPreferences, timeout(100)).unregisterOnSharedPreferenceChangeListener(listenerCaptor.lastValue)
     }
     //endregion
 }
