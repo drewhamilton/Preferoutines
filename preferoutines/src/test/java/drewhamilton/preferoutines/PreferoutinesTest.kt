@@ -2,11 +2,8 @@ package drewhamilton.preferoutines
 
 import android.content.SharedPreferences
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,8 +21,8 @@ class PreferoutinesTest {
 
     @Before
     fun setUp() {
-        whenever(mockSharedPreferences.edit()).thenReturn(mockSharedPreferencesEditor)
-        whenever(mockSharedPreferencesEditor.commit()).thenReturn(true)
+//        whenever(mockSharedPreferences.edit()).thenReturn(mockSharedPreferencesEditor)
+//        whenever(mockSharedPreferencesEditor.commit()).thenReturn(true)
     }
 
     //region All preferences
@@ -34,9 +31,7 @@ class PreferoutinesTest {
         val testMap = mapOf(Pair("Made up map key", 23498))
         whenever(mockSharedPreferences.all).thenReturn(testMap)
 
-        val deferredResult = GlobalScope.async { preferoutines.getAll() }
-        assertFalse(deferredResult.isCompleted)
-        assertEquals(testMap, runBlocking { deferredResult.await() })
+        runBlocking { assertEquals(testMap, preferoutines.getAll()) }
     }
     //endregion
 }
