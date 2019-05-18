@@ -1,6 +1,11 @@
 package drewhamilton.preferoutines
 
 import android.content.SharedPreferences
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowViaChannel
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -14,6 +19,16 @@ class Preferoutines(
 
     suspend fun getString(key: String, defaultValue: String?): String? = suspendCoroutine {
         it.resume(preferences.getString(key, defaultValue))
+    }
+
+    @UseExperimental(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    fun getStringFlow(key: String, defaultValue: String?): Flow<String?> = flowViaChannel(CONFLATED) { channel ->
+        val listener = CoroutinePreferenceChangeListener(key, channel, defaultValue, SharedPreferences::getString)
+        preferences.registerOnSharedPreferenceChangeListener(listener)
+        channel.invokeOnClose {
+            preferences.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+        channel.offer(preferences.getString(key, defaultValue))
     }
 
     suspend fun getStringSet(key: String, defaultValue: Set<String>?): Set<String>? = suspendCoroutine {
