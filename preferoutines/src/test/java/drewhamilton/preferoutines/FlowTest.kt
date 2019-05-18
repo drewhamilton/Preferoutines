@@ -13,7 +13,7 @@ import org.junit.After
 import org.junit.Before
 import kotlin.coroutines.CoroutineContext
 
-@FlowPreview
+@UseExperimental(FlowPreview::class)
 abstract class FlowTest {
 
     private lateinit var testContext: CoroutineContext
