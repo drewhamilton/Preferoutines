@@ -22,7 +22,7 @@ class Preferoutines(
     }
 
     @FlowPreview
-    @ExperimentalCoroutinesApi
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     fun getStringFlow(key: String, defaultValue: String?): Flow<String?> = flowViaChannel(CONFLATED) { channel ->
         channel.offer(preferences.getString(key, defaultValue))
 
