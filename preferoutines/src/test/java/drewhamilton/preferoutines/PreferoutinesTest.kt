@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.timeout
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -127,16 +128,51 @@ class PreferoutinesTest : FlowTest() {
     @FlowPreview
     @Test
     fun `getStringFlow emits current value on collect`() {
-        val testKey = "Test string key"
-        val testValue = "Test value"
-        val testDefault = "Test default"
-        whenever(mockSharedPreferences.getString(testKey, testDefault)).thenReturn(testValue)
+        testGetPreferenceFlow_emitsCurrentValueOnCollect(
+            SharedPreferences::getString,
+            Preferoutines::getStringFlow,
+            "Test value",
+            "Test default"
+        )
+    }
 
-        val testCollector = preferoutines.getStringFlow(testKey, testDefault).test()
+    @FlowPreview
+    @Test
+    fun `getStringFlow emits on listener update`() {
+        testGetPreferenceFlow_emitsOnListenerUpdate(
+            SharedPreferences::getString,
+            Preferoutines::getStringFlow,
+            "Test value",
+            "Test default"
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getStringFlow unregisters listener on cancel`() {
+        testGetPreferenceFlow_unregistersListenerOnCancel(
+            SharedPreferences::getString,
+            Preferoutines::getStringFlow,
+            "Test value",
+            "Test default"
+        )
+    }
+
+    @FlowPreview
+    private fun <T> testGetPreferenceFlow_emitsCurrentValueOnCollect(
+        getPreference: SharedPreferences.(String, T) -> T,
+        getPreferenceFlow: Preferoutines.(String, T) -> Flow<T>,
+        testValue: T,
+        testDefault: T,
+        testKey: String = "Test key"
+    ) {
+        whenever(mockSharedPreferences.getPreference(testKey, testDefault)).thenReturn(testValue)
+
+        val testCollector = preferoutines.getPreferenceFlow(testKey, testDefault).test()
 
         // Verify method call with timeout to allow flow initialization to complete:
         verify(mockSharedPreferences, timeout(500)).registerOnSharedPreferenceChangeListener(any())
-        verify(mockSharedPreferences).getString(testKey, testDefault)
+        verify(mockSharedPreferences).getPreference(testKey, testDefault)
 
         testCollector.assert {
             valueCount(1)
@@ -145,40 +181,44 @@ class PreferoutinesTest : FlowTest() {
     }
 
     @FlowPreview
-    @Test
-    fun `getStringFlow emits on listener update`() {
-        val testKey = "Test string key"
-        val testValue = "Test value"
-        val testDefault = "Test default"
-        whenever(mockSharedPreferences.getString(testKey, testDefault)).thenReturn(testValue)
+    private fun <T> testGetPreferenceFlow_emitsOnListenerUpdate(
+        getPreference: SharedPreferences.(String, T) -> T,
+        getPreferenceFlow: Preferoutines.(String, T) -> Flow<T>,
+        testValue: T,
+        testDefault: T,
+        testKey: String = "Test key"
+    ) {
+        whenever(mockSharedPreferences.getPreference(testKey, testDefault)).thenReturn(testValue)
 
-        val testCollector = preferoutines.getStringFlow(testKey, testDefault).test()
+        val testCollector = preferoutines.getPreferenceFlow(testKey, testDefault).test()
 
         val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
         verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
-        verify(mockSharedPreferences).getString(testKey, testDefault)
+        verify(mockSharedPreferences).getPreference(testKey, testDefault)
 
         testCollector.assert { valueCount(1) }
 
         listenerCaptor.lastValue.onSharedPreferenceChanged(mockSharedPreferences, testKey)
 
-        verify(mockSharedPreferences, timeout(100).times(2)).getString(testKey, testDefault)
+        verify(mockSharedPreferences, timeout(100).times(2)).getPreference(testKey, testDefault)
         testCollector.assert { valueCount(2) }
     }
 
     @FlowPreview
-    @Test
-    fun `getStringFlow unregisters listener on cancel`() {
-        val testKey = "Test string key"
-        val testValue = "Test value"
-        val testDefault = "Test default"
-        whenever(mockSharedPreferences.getString(testKey, testDefault)).thenReturn(testValue)
+    private inline fun <T> testGetPreferenceFlow_unregistersListenerOnCancel(
+        getPreference: SharedPreferences.(String, T) -> T,
+        getPreferenceFlow: Preferoutines.(String, T) -> Flow<T>,
+        testValue: T,
+        testDefault: T,
+        testKey: String = "Test key"
+    ) {
+        whenever(mockSharedPreferences.getPreference(testKey, testDefault)).thenReturn(testValue)
 
-        val testCollector = preferoutines.getStringFlow(testKey, testDefault).test()
+        val testCollector = preferoutines.getPreferenceFlow(testKey, testDefault).test()
 
         val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
         verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
-        verify(mockSharedPreferences).getString(testKey, testDefault)
+        verify(mockSharedPreferences).getPreference(testKey, testDefault)
         verify(mockSharedPreferences, never()).unregisterOnSharedPreferenceChangeListener(any())
 
         testCollector.assert { valueCount(1) }
