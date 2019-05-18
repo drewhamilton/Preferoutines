@@ -13,6 +13,7 @@ import org.junit.After
 import org.junit.Before
 import kotlin.coroutines.CoroutineContext
 
+@FlowPreview
 abstract class FlowTest {
 
     private lateinit var testContext: CoroutineContext
@@ -38,7 +39,6 @@ abstract class FlowTest {
     }
 
     @UseExperimental(ObsoleteCoroutinesApi::class)
-    @FlowPreview
     protected fun <T> Flow<T>.test(): TestCollector<T> {
         val testCollector = TestCollector<T>()
         testCollector.deferred = testScope.async(testContext) {

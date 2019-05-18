@@ -137,10 +137,10 @@ class PreferoutinesTest : FlowTest() {
         verify(mockSharedPreferences, timeout(500)).registerOnSharedPreferenceChangeListener(any())
         verify(mockSharedPreferences).getString(testKey, testDefault)
 
-        Thread.sleep(10)
-        assertEquals(1, testCollector.values.size)
-        assertEquals(testValue, testCollector.values[0])
-
+        testCollector.assert {
+            valueCount(1)
+            values(testValue)
+        }
     }
 
     @FlowPreview
@@ -157,15 +157,12 @@ class PreferoutinesTest : FlowTest() {
         verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
         verify(mockSharedPreferences).getString(testKey, testDefault)
 
-        // TODO WORKAROUND: Race condition with channel's value is avoided with a short sleep
-        Thread.sleep(10)
-        assertEquals(1, testCollector.values.size)
+        testCollector.assert { valueCount(1) }
 
         listenerCaptor.lastValue.onSharedPreferenceChanged(mockSharedPreferences, testKey)
 
         verify(mockSharedPreferences, timeout(100).times(2)).getString(testKey, testDefault)
-        Thread.sleep(10)
-        assertEquals(2, testCollector.values.size)
+        testCollector.assert { valueCount(2) }
     }
     //endregion
 }
