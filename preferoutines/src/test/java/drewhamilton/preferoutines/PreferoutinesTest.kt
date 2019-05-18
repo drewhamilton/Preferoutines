@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.timeout
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.async
@@ -27,13 +28,10 @@ import kotlin.coroutines.CoroutineContext
 @RunWith(MockitoJUnitRunner::class)
 class PreferoutinesTest {
 
-    @Mock
-    private lateinit var mockSharedPreferences: SharedPreferences
-    @Mock
-    private lateinit var mockSharedPreferencesEditor: SharedPreferences.Editor
+    @Mock private lateinit var mockSharedPreferences: SharedPreferences
+    @Mock private lateinit var mockSharedPreferencesEditor: SharedPreferences.Editor
 
-    @InjectMocks
-    private lateinit var preferoutines: Preferoutines
+    @InjectMocks private lateinit var preferoutines: Preferoutines
 
     @ObsoleteCoroutinesApi
     private val testContext: CoroutineContext = newSingleThreadContext("Test context")
@@ -147,6 +145,7 @@ class PreferoutinesTest {
     //region Flow functions
     @ObsoleteCoroutinesApi
     @FlowPreview
+    @ExperimentalCoroutinesApi
     @Test
     fun `getStringFlow emits starting value once`() {
         val testKey = "Test string key"
