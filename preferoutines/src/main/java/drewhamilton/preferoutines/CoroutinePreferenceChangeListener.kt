@@ -9,7 +9,7 @@ internal class CoroutinePreferenceChangeListener<T> constructor(
     key: String,
     channel: SendChannel<T>,
     private val defaultValue: T,
-    private val getPreference: (SharedPreferences).(String, T) -> T
+    private inline val getPreference: SharedPreferences.(String, T) -> T
 ) : CoroutinePreferenceListener<T>(key, channel) {
 
     override fun SharedPreferences.getCurrentValue() = getPreference(key, defaultValue)

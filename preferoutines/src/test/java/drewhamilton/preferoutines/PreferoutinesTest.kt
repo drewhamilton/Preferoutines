@@ -159,6 +159,171 @@ class PreferoutinesTest : FlowTest() {
     }
 
     @FlowPreview
+    @Test
+    fun `getStringSetFlow emits current value on collect`() {
+        testGetPreferenceFlow_emitsCurrentValueOnCollect(
+            SharedPreferences::getStringSet,
+            Preferoutines::getStringSetFlow,
+            setOf("Test value 1", "Test value 2"),
+            setOf("Test default 1", "Test default 2")
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getStringSetFlow emits on listener update`() {
+        testGetPreferenceFlow_emitsOnListenerUpdate(
+            SharedPreferences::getStringSet,
+            Preferoutines::getStringSetFlow,
+            setOf("Test value 1", "Test value 2"),
+            setOf("Test default 1", "Test default 2")
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getStringSetFlow unregisters listener on cancel`() {
+        testGetPreferenceFlow_unregistersListenerOnCancel(
+            SharedPreferences::getStringSet,
+            Preferoutines::getStringSetFlow,
+            setOf("Test value 1", "Test value 2"),
+            setOf("Test default 1", "Test default 2")
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getIntFlow emits current value on collect`() {
+        testGetPreferenceFlow_emitsCurrentValueOnCollect(
+            SharedPreferences::getInt,
+            Preferoutines::getIntFlow,
+            123,
+            -321
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getIntFlow emits on listener update`() {
+        testGetPreferenceFlow_emitsOnListenerUpdate(
+            SharedPreferences::getInt,
+            Preferoutines::getIntFlow,
+            123,
+            -321
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getIntFlow unregisters listener on cancel`() {
+        testGetPreferenceFlow_unregistersListenerOnCancel(
+            SharedPreferences::getInt,
+            Preferoutines::getIntFlow,
+            123,
+            -321
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getLongFlow emits current value on collect`() {
+        testGetPreferenceFlow_emitsCurrentValueOnCollect(
+            SharedPreferences::getLong,
+            Preferoutines::getLongFlow,
+            12345678900,
+            -9876543210
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getLongFlow emits on listener update`() {
+        testGetPreferenceFlow_emitsOnListenerUpdate(
+            SharedPreferences::getLong,
+            Preferoutines::getLongFlow,
+            12345678900,
+            -9876543210
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getLongFlow unregisters listener on cancel`() {
+        testGetPreferenceFlow_unregistersListenerOnCancel(
+            SharedPreferences::getLong,
+            Preferoutines::getLongFlow,
+            12345678900,
+            -9876543210
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getFloatFlow emits current value on collect`() {
+        testGetPreferenceFlow_emitsCurrentValueOnCollect(
+            SharedPreferences::getFloat,
+            Preferoutines::getFloatFlow,
+            123.456f,
+            -321.987f
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getFloatFlow emits on listener update`() {
+        testGetPreferenceFlow_emitsOnListenerUpdate(
+            SharedPreferences::getFloat,
+            Preferoutines::getFloatFlow,
+            123.456f,
+            -321.987f
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getFloatFlow unregisters listener on cancel`() {
+        testGetPreferenceFlow_unregistersListenerOnCancel(
+            SharedPreferences::getFloat,
+            Preferoutines::getFloatFlow,
+            123.456f,
+            -321.987f
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getBooleanFlow emits current value on collect`() {
+        testGetPreferenceFlow_emitsCurrentValueOnCollect(
+            SharedPreferences::getBoolean,
+            Preferoutines::getBooleanFlow,
+            testValue = true,
+            testDefault = false
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getBooleanFlow emits on listener update`() {
+        testGetPreferenceFlow_emitsOnListenerUpdate(
+            SharedPreferences::getBoolean,
+            Preferoutines::getBooleanFlow,
+            testValue = true,
+            testDefault = false
+        )
+    }
+
+    @FlowPreview
+    @Test
+    fun `getBooleanFlow unregisters listener on cancel`() {
+        testGetPreferenceFlow_unregistersListenerOnCancel(
+            SharedPreferences::getBoolean,
+            Preferoutines::getBooleanFlow,
+            testValue = true,
+            testDefault = false
+        )
+    }
+
+    @FlowPreview
     private fun <T> testGetPreferenceFlow_emitsCurrentValueOnCollect(
         getPreference: SharedPreferences.(String, T) -> T,
         getPreferenceFlow: Preferoutines.(String, T) -> Flow<T>,
