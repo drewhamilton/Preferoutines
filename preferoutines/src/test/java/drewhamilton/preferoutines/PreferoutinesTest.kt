@@ -141,7 +141,6 @@ class PreferoutinesTest : FlowTest() {
         assertEquals(1, testCollector.values.size)
         assertEquals(testValue, testCollector.values[0])
 
-        testCollector.deferred.cancel()
     }
 
     @FlowPreview
@@ -167,8 +166,6 @@ class PreferoutinesTest : FlowTest() {
         verify(mockSharedPreferences, timeout(100).times(2)).getString(testKey, testDefault)
         Thread.sleep(10)
         assertEquals(2, testCollector.values.size)
-
-        testCollector.deferred.cancel()
     }
     //endregion
 }

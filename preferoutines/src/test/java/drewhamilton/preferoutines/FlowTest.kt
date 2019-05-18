@@ -18,6 +18,8 @@ abstract class FlowTest {
     private lateinit var testContext: CoroutineContext
     private lateinit var testScope: CoroutineScope
 
+    private val testCollectors: MutableCollection<TestCollector<*>> = mutableSetOf()
+
     @UseExperimental(ObsoleteCoroutinesApi::class)
     @Before
     fun setUpTestScope() {
@@ -27,7 +29,10 @@ abstract class FlowTest {
 
     @UseExperimental(ObsoleteCoroutinesApi::class)
     @After
-    fun tearDownTestContext() {
+    fun cancelAllJobs() {
+        for (testCollector in testCollectors) {
+            testCollector.deferred.cancel()
+        }
         testContext.cancelChildren()
         testContext.cancel()
     }
@@ -37,10 +42,11 @@ abstract class FlowTest {
     protected fun <T> Flow<T>.test(): TestCollector<T> {
         val testCollector = TestCollector<T>()
         testCollector.deferred = testScope.async(testContext) {
-            collect {
-                testCollector.values.add(it)
+            collect { value ->
+                testCollector.values.add(value)
             }
         }
+        testCollectors.add(testCollector)
         return testCollector
     }
 
