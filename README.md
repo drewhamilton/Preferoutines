@@ -13,8 +13,7 @@ Coming soon.
 * Add edit functions
 * Make it public
 * Add to JCenter/Maven
-* Decide whether the API should be a wrapper or extension functions
-* Add extras extensions, Dagger, etc.
+* Add extra extensions for enums etc.
 * Decide on method naming conventions
 * Await release of stable `Flow` API
 
