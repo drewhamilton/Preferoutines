@@ -22,9 +22,7 @@ class Preferoutines(
     fun getAllFlow(): Flow<Map<String, *>> = flowViaChannel(CONFLATED) { channel ->
         channel.offer(preferences.all)
 
-        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, _ ->
-            channel.offer(sharedPreferences.all)
-        }
+        val listener = CoroutineAllPreferenceListener(channel)
         preferences.registerOnSharedPreferenceChangeListener(listener)
         channel.invokeOnClose {
             preferences.unregisterOnSharedPreferenceChangeListener(listener)
@@ -82,11 +80,7 @@ class Preferoutines(
     fun getContainsFlow(key: String): Flow<Boolean> = flowViaChannel(CONFLATED) { channel ->
         channel.offer(preferences.contains(key))
 
-        val listener = object : SinglePreferenceListener(key) {
-            override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences) {
-                channel.offer(preferences.contains(key))
-            }
-        }
+        val listener = CoroutineSinglePreferenceContainsListener(key, channel)
         preferences.registerOnSharedPreferenceChangeListener(listener)
         channel.invokeOnClose {
             preferences.unregisterOnSharedPreferenceChangeListener(listener)
@@ -110,7 +104,7 @@ class Preferoutines(
     ): Flow<T> = flowViaChannel(CONFLATED) { channel ->
         channel.offer(preferences.getPreference(key, defaultValue))
 
-        val listener = CoroutinePreferenceChangeListener(key, channel, defaultValue, getPreference)
+        val listener = CoroutineSinglePreferenceChangeListener(key, channel, defaultValue, getPreference)
         preferences.registerOnSharedPreferenceChangeListener(listener)
         channel.invokeOnClose {
             preferences.unregisterOnSharedPreferenceChangeListener(listener)
