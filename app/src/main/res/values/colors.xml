@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+
+    <color name="primaryLight">@color/orange</color>
+    <color name="primary">@color/orange_pink_midpoint</color>
+    <color name="primaryDark">@color/pink</color>
+
+    <color name="secondaryLight">@color/blue</color>
+    <color name="secondary">@color/blue_purple_midpoint</color>
+    <color name="secondaryDark">@color/purple</color>
+
+    <color name="orange">#f88a03</color>
+    <color name="orange_pink_midpoint">#ed7e31</color>
+    <color name="pink">#c857be</color>
+
+    <color name="blue">#0096d6</color>
+    <color name="blue_purple_midpoint">#0592d8</color>
+    <color name="purple">#816ee4</color>
+
+    <color name="white">#ffffff</color>
+    <color name="white_30_percent">#4dffffff</color>
+
+    <color name="black">#000000</color>
+    <color name="black_87_percent">#de000000</color>
+    <color name="black_38_percent">#61000000</color>
 </resources>
