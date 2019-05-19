@@ -1,5 +1,6 @@
 package drewhamilton.preferoutines.test
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
@@ -22,6 +23,12 @@ abstract class BasePreferoutinesTest : FlowTest() {
 
     @Mock protected lateinit var mockSharedPreferences: SharedPreferences
     @Mock protected lateinit var mockSharedPreferencesEditor: SharedPreferences.Editor
+
+    @SuppressLint("CommitPrefEdits")
+    protected fun setUpMockEditor() {
+        whenever(mockSharedPreferences.edit()).thenReturn(mockSharedPreferencesEditor)
+        whenever(mockSharedPreferencesEditor.commit()).thenReturn(true)
+    }
 
     //region Suspend
     protected fun <T, P> testAwaitPreference_returnsCorrespondingPreference(

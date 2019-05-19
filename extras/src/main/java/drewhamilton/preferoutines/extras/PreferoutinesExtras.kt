@@ -1,6 +1,7 @@
 package drewhamilton.preferoutines.extras
 
 import android.content.SharedPreferences
+import drewhamilton.preferoutines.awaitCommit
 import drewhamilton.preferoutines.awaitString
 import drewhamilton.preferoutines.awaitStringSet
 import drewhamilton.preferoutines.getStringFlow
@@ -57,6 +58,9 @@ inline fun <reified E : Enum<E>> SharedPreferences.getNonNullEnumFlow(key: Strin
 //endregion
 
 //region Edit
+suspend inline fun SharedPreferences.awaitEdits(edits: SharedPreferences.Editor.() -> SharedPreferences.Editor) =
+    edits.invoke(this.edit()).awaitCommit()
+
 inline fun <reified E : Enum<E>> SharedPreferences.Editor.putEnum(key: String, value: E?): SharedPreferences.Editor =
     putString(key, value?.name)
 //endregion

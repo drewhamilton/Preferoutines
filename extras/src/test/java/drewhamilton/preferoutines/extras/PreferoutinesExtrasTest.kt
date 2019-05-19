@@ -1,18 +1,29 @@
 package drewhamilton.preferoutines.extras
 
 import android.content.SharedPreferences
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import drewhamilton.preferoutines.extras.test.TestEnum
 import drewhamilton.preferoutines.test.BasePreferoutinesTest
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 
 class PreferoutinesExtrasTest : BasePreferoutinesTest() {
+
+    @Before
+    fun setUp() {
+        setUpMockEditor()
+        whenever(mockSharedPreferencesEditor.putInt(any(), any())).thenReturn(mockSharedPreferencesEditor)
+    }
 
     //region Synchronous
     @Test
@@ -185,6 +196,29 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
     //endregion
 
     //region Edit
+    @Test fun `awaitEdits commits edits in order`() {
+        val testStringKey = "Test string key"
+        val testStringValue = "Test string value"
+        val testIntKey = "Test int key"
+        val testIntValue = 8348
+
+        runBlocking {
+            val result = mockSharedPreferences.awaitEdits {
+                putString(testStringKey, testStringValue)
+                putInt(testIntKey, testIntValue)
+            }
+            assertTrue(result)
+        }
+
+        val editingOrder = inOrder(mockSharedPreferences, mockSharedPreferencesEditor)
+
+        editingOrder.verify(mockSharedPreferences).edit()
+        editingOrder.verify(mockSharedPreferencesEditor).putString(testStringKey, testStringValue)
+        editingOrder.verify(mockSharedPreferencesEditor).putInt(testIntKey, testIntValue)
+        editingOrder.verify(mockSharedPreferencesEditor).commit()
+        editingOrder.verifyNoMoreInteractions()
+    }
+
     @Test fun `putEnum saves enum name as string preference`() {
         val testKey = "Test enum key"
         val testValue = TestEnum.A
