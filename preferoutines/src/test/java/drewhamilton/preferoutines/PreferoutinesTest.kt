@@ -27,7 +27,7 @@ class PreferoutinesTest : FlowTest() {
 
     //region Suspend
     @Test
-    fun `awaitAll returns map from internal preferences`() {
+    fun `awaitAll returns map from getAll`() {
         val testMap = mapOf(Pair("Made up map key", 23498))
         whenever(mockSharedPreferences.all).thenReturn(testMap)
 
@@ -35,7 +35,7 @@ class PreferoutinesTest : FlowTest() {
     }
 
     @Test
-    fun `awaitString returns value from internal preferences`() {
+    fun `awaitString returns value from getString`() {
         val testKey = "Test string key"
         val testValue = "Test value"
         val testDefault = "Test default"
@@ -45,7 +45,7 @@ class PreferoutinesTest : FlowTest() {
     }
 
     @Test
-    fun `awaitString returns null from internal preferences`() {
+    fun `awaitString returns null from getString`() {
         val testKey = "Test string key"
         val testDefault = null
         whenever(mockSharedPreferences.getString(testKey, testDefault)).thenReturn(testDefault)
@@ -54,7 +54,7 @@ class PreferoutinesTest : FlowTest() {
     }
 
     @Test
-    fun `awaitStringSet returns value from internal preferences`() {
+    fun `awaitStringSet returns value from getStringSet`() {
         val testKey = "Test string set key"
         val testValue = setOf("Test value 1", "Test value 2")
         val testDefault = setOf("Test default 1")
@@ -64,7 +64,7 @@ class PreferoutinesTest : FlowTest() {
     }
 
     @Test
-    fun `awaitStringSet returns null from internal preferences`() {
+    fun `awaitStringSet returns null from getStringSet`() {
         val testKey = "Test string set key"
         val testDefault = null
         whenever(mockSharedPreferences.getStringSet(testKey, testDefault)).thenReturn(testDefault)
@@ -73,7 +73,7 @@ class PreferoutinesTest : FlowTest() {
     }
 
     @Test
-    fun `awaitInt returns value from internal preferences`() {
+    fun `awaitInt returns value from getInt`() {
         val testKey = "Test int key"
         val testValue = 2332
         val testDefault = -987
@@ -83,7 +83,7 @@ class PreferoutinesTest : FlowTest() {
     }
 
     @Test
-    fun `awaitLong returns value from internal preferences`() {
+    fun `awaitLong returns value from getLong`() {
         val testKey = "Test long key"
         val testValue = 342342342343L
         val testDefault = -38948985934859L
@@ -93,7 +93,7 @@ class PreferoutinesTest : FlowTest() {
     }
 
     @Test
-    fun `awaitFloat returns value from internal preferences`() {
+    fun `awaitFloat returns value from getFloat`() {
         val testKey = "Test float key"
         val testValue = 234.432f
         val testDefault = -987.654f
@@ -103,7 +103,7 @@ class PreferoutinesTest : FlowTest() {
     }
 
     @Test
-    fun `awaitBoolean returns value from internal preferences`() {
+    fun `awaitBoolean returns value from getBoolean`() {
         val testKey = "Test boolean key"
         val testValue = true
         val testDefault = false
@@ -113,7 +113,7 @@ class PreferoutinesTest : FlowTest() {
     }
 
     @Test
-    fun `awaitContains returns value from internal preferences`() {
+    fun `awaitContains returns value from contains`() {
         val testKey = "Test key"
         val testValue = true
         whenever(mockSharedPreferences.contains(testKey)).thenReturn(testValue)
