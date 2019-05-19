@@ -1,6 +1,8 @@
 # Preferoutines
 A Kotlin Coroutines wrapper for Android's SharedPreferences.
 
+Preferoutines is in pre-release. The API may undergo breaking changes before version 1.0.0 is released.
+
 ## Download
 Coming soon.
 
@@ -8,11 +10,13 @@ Coming soon.
 Coming soon.
 
 ## To-do
-* Add suspend functions
-* Add `Flow` functions
-* Add to JCenter/Maven
-* Add extensions, Dagger, etc.
+* Add edit functions
 * Make it public
+* Add to JCenter/Maven
+* Decide whether the API should be a wrapper or extension functions
+* Add extras extensions, Dagger, etc.
+* Decide on method naming conventions
+* Await release of stable `Flow` API
 
 ## License
 ```
