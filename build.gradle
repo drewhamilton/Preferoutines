@@ -9,7 +9,12 @@ buildscript {
 
   dependencies {
     classpath 'com.android.tools.build:gradle:3.5.0-beta01'
+
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.18"
+
+    classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
   }
 
 }
@@ -29,4 +34,17 @@ task clean(type: Delete) {
 ext {
   libraryVersionCode = 1
   libraryVersion = '0.1.0'
+
+  keystore = project.hasProperty('personalKeystore') ?
+      personalKeystore :
+      System.getenv('personalKeystore')
+  keystorePassword = project.hasProperty('personalKeystorePassword') ?
+      personalKeystorePassword :
+      System.getenv('personalKeystorePassword')
+  keyAlias = project.hasProperty('personalKeyAlias') ?
+      personalKeyAlias :
+      System.getenv('personalKeyAlias')
+  keyPassword = project.hasProperty('personalKeyPassword') ?
+      personalKeyPassword :
+      System.getenv('personalKeyPassword')
 }
