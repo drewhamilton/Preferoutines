@@ -10,7 +10,6 @@ Coming soon.
 Coming soon.
 
 ## To-do
-* Make it public
 * Add to JCenter/Maven
 * Add extra extensions for enums etc.
 * Decide on method naming conventions
