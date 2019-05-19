@@ -12,7 +12,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -36,80 +35,66 @@ class PreferoutinesTest : FlowTest() {
 
     @Test
     fun `awaitString returns value from getString`() {
-        val testKey = "Test string key"
-        val testValue = "Test value"
-        val testDefault = "Test default"
-        whenever(mockSharedPreferences.getString(testKey, testDefault)).thenReturn(testValue)
-
-        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitString(testKey, testDefault)) }
+        testAwaitPreference_returnsCorrespondingPreference(
+            SharedPreferences::getString, SharedPreferences::awaitString,
+            testValue = "Test value", testDefault = "Test default"
+        )
     }
 
     @Test
     fun `awaitString returns null from getString`() {
-        val testKey = "Test string key"
-        val testDefault = null
-        whenever(mockSharedPreferences.getString(testKey, testDefault)).thenReturn(testDefault)
-
-        runBlocking { assertNull(mockSharedPreferences.awaitString(testKey, testDefault)) }
+        testAwaitPreference_returnsCorrespondingPreference(
+            SharedPreferences::getString, SharedPreferences::awaitString,
+            testValue = null, testDefault = null
+        )
     }
 
     @Test
     fun `awaitStringSet returns value from getStringSet`() {
-        val testKey = "Test string set key"
-        val testValue = setOf("Test value 1", "Test value 2")
-        val testDefault = setOf("Test default 1")
-        whenever(mockSharedPreferences.getStringSet(testKey, testDefault)).thenReturn(testValue)
-
-        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitStringSet(testKey, testDefault)) }
+        testAwaitPreference_returnsCorrespondingPreference(
+            SharedPreferences::getStringSet, SharedPreferences::awaitStringSet,
+            testValue = setOf("Test value 1", "Test value 2"), testDefault = setOf("Test default 1")
+        )
     }
 
     @Test
     fun `awaitStringSet returns null from getStringSet`() {
-        val testKey = "Test string set key"
-        val testDefault = null
-        whenever(mockSharedPreferences.getStringSet(testKey, testDefault)).thenReturn(testDefault)
-
-        runBlocking { assertNull(mockSharedPreferences.awaitStringSet(testKey, testDefault)) }
+        testAwaitPreference_returnsCorrespondingPreference(
+            SharedPreferences::getStringSet, SharedPreferences::awaitStringSet,
+            testValue = null, testDefault = null
+        )
     }
 
     @Test
     fun `awaitInt returns value from getInt`() {
-        val testKey = "Test int key"
-        val testValue = 2332
-        val testDefault = -987
-        whenever(mockSharedPreferences.getInt(testKey, testDefault)).thenReturn(testValue)
-
-        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitInt(testKey, testDefault)) }
+        testAwaitPreference_returnsCorrespondingPreference(
+            SharedPreferences::getInt, SharedPreferences::awaitInt,
+            testValue = 2332, testDefault = -987
+        )
     }
 
     @Test
     fun `awaitLong returns value from getLong`() {
-        val testKey = "Test long key"
-        val testValue = 342342342343L
-        val testDefault = -38948985934859L
-        whenever(mockSharedPreferences.getLong(testKey, testDefault)).thenReturn(testValue)
-
-        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitLong(testKey, testDefault)) }
+        testAwaitPreference_returnsCorrespondingPreference(
+            SharedPreferences::getLong, SharedPreferences::awaitLong,
+            testValue = 342342342343L, testDefault = -38948985934859L
+        )
     }
 
     @Test
     fun `awaitFloat returns value from getFloat`() {
-        val testKey = "Test float key"
-        val testValue = 234.432f
-        val testDefault = -987.654f
-        whenever(mockSharedPreferences.getFloat(testKey, testDefault)).thenReturn(testValue)
-
-        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitFloat(testKey, testDefault)) }
+        testAwaitPreference_returnsCorrespondingPreference(
+            SharedPreferences::getFloat, SharedPreferences::awaitFloat,
+            testValue = 234.432f, testDefault = -987.654f
+        )
     }
 
     @Test
     fun `awaitBoolean returns value from getBoolean`() {
-        val testKey = "Test boolean key"
-        val testValue = true
-        val testDefault = false
-        whenever(mockSharedPreferences.getBoolean(testKey, testDefault)).thenReturn(testValue)
-
-        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitBoolean(testKey, testDefault)) }
+        testAwaitPreference_returnsCorrespondingPreference(
+            SharedPreferences::getBoolean, SharedPreferences::awaitBoolean,
+            testValue = true, testDefault = false
+        )
     }
 
     @Test
@@ -119,6 +104,18 @@ class PreferoutinesTest : FlowTest() {
         whenever(mockSharedPreferences.contains(testKey)).thenReturn(testValue)
 
         runBlocking { assertEquals(testValue, mockSharedPreferences.awaitContains(testKey)) }
+    }
+
+    private fun <T> testAwaitPreference_returnsCorrespondingPreference(
+        getPreference: SharedPreferences.(String, T) -> T,
+        awaitPreference: suspend SharedPreferences.(String, T) -> T,
+        testValue: T,
+        testDefault: T,
+        testKey: String = "Test key"
+    ) {
+        whenever(mockSharedPreferences.getPreference(testKey, testDefault)).thenReturn(testValue)
+
+        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitPreference(testKey, testDefault)) }
     }
     //endregion
 
@@ -184,10 +181,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getStringFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
-            SharedPreferences::getString,
-            SharedPreferences::getStringFlow,
-            "Test value",
-            "Test default"
+            SharedPreferences::getString, SharedPreferences::getStringFlow,
+            testValue = "Test value", testDefault = "Test default"
         )
     }
 
@@ -195,10 +190,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getStringFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
-            SharedPreferences::getString,
-            SharedPreferences::getStringFlow,
-            "Test value",
-            "Test default"
+            SharedPreferences::getString, SharedPreferences::getStringFlow,
+            testValue = "Test value", testDefault = "Test default"
         )
     }
 
@@ -206,10 +199,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getStringFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
-            SharedPreferences::getString,
-            SharedPreferences::getStringFlow,
-            "Test value",
-            "Test default"
+            SharedPreferences::getString, SharedPreferences::getStringFlow,
+            testValue = "Test value", testDefault = "Test default"
         )
     }
 
@@ -217,10 +208,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getStringSetFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
-            SharedPreferences::getStringSet,
-            SharedPreferences::getStringSetFlow,
-            setOf("Test value 1", "Test value 2"),
-            setOf("Test default 1", "Test default 2")
+            SharedPreferences::getStringSet, SharedPreferences::getStringSetFlow,
+            testValue = setOf("Test value 1", "Test value 2"), testDefault = setOf("Test default 1", "Test default 2")
         )
     }
 
@@ -228,10 +217,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getStringSetFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
-            SharedPreferences::getStringSet,
-            SharedPreferences::getStringSetFlow,
-            setOf("Test value 1", "Test value 2"),
-            setOf("Test default 1", "Test default 2")
+            SharedPreferences::getStringSet, SharedPreferences::getStringSetFlow,
+            testValue = setOf("Test value 1", "Test value 2"), testDefault = setOf("Test default 1", "Test default 2")
         )
     }
 
@@ -239,10 +226,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getStringSetFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
-            SharedPreferences::getStringSet,
-            SharedPreferences::getStringSetFlow,
-            setOf("Test value 1", "Test value 2"),
-            setOf("Test default 1", "Test default 2")
+            SharedPreferences::getStringSet, SharedPreferences::getStringSetFlow,
+            testValue = setOf("Test value 1", "Test value 2"), testDefault = setOf("Test default 1", "Test default 2")
         )
     }
 
@@ -250,10 +235,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getIntFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
-            SharedPreferences::getInt,
-            SharedPreferences::getIntFlow,
-            123,
-            -321
+            SharedPreferences::getInt, SharedPreferences::getIntFlow,
+            testValue = 123, testDefault = -321
         )
     }
 
@@ -261,10 +244,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getIntFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
-            SharedPreferences::getInt,
-            SharedPreferences::getIntFlow,
-            123,
-            -321
+            SharedPreferences::getInt, SharedPreferences::getIntFlow,
+            testValue = 123, testDefault = -321
         )
     }
 
@@ -272,10 +253,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getIntFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
-            SharedPreferences::getInt,
-            SharedPreferences::getIntFlow,
-            123,
-            -321
+            SharedPreferences::getInt, SharedPreferences::getIntFlow,
+            testValue = 123, testDefault = -321
         )
     }
 
@@ -283,10 +262,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getLongFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
-            SharedPreferences::getLong,
-            SharedPreferences::getLongFlow,
-            12345678900,
-            -9876543210
+            SharedPreferences::getLong, SharedPreferences::getLongFlow,
+            testValue = 12345678900, testDefault = -9876543210
         )
     }
 
@@ -294,10 +271,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getLongFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
-            SharedPreferences::getLong,
-            SharedPreferences::getLongFlow,
-            12345678900,
-            -9876543210
+            SharedPreferences::getLong, SharedPreferences::getLongFlow,
+            testValue = 12345678900, testDefault = -9876543210
         )
     }
 
@@ -305,10 +280,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getLongFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
-            SharedPreferences::getLong,
-            SharedPreferences::getLongFlow,
-            12345678900,
-            -9876543210
+            SharedPreferences::getLong, SharedPreferences::getLongFlow,
+            testValue = 12345678900, testDefault = -9876543210
         )
     }
 
@@ -316,10 +289,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getFloatFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
-            SharedPreferences::getFloat,
-            SharedPreferences::getFloatFlow,
-            123.456f,
-            -321.987f
+            SharedPreferences::getFloat, SharedPreferences::getFloatFlow,
+            testValue = 123.456f, testDefault = -321.987f
         )
     }
 
@@ -327,10 +298,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getFloatFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
-            SharedPreferences::getFloat,
-            SharedPreferences::getFloatFlow,
-            123.456f,
-            -321.987f
+            SharedPreferences::getFloat, SharedPreferences::getFloatFlow,
+            testValue = 123.456f, testDefault = -321.987f
         )
     }
 
@@ -338,10 +307,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getFloatFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
-            SharedPreferences::getFloat,
-            SharedPreferences::getFloatFlow,
-            123.456f,
-            -321.987f
+            SharedPreferences::getFloat, SharedPreferences::getFloatFlow,
+            testValue = 123.456f, testDefault = -321.987f
         )
     }
 
@@ -349,10 +316,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getBooleanFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
-            SharedPreferences::getBoolean,
-            SharedPreferences::getBooleanFlow,
-            testValue = true,
-            testDefault = false
+            SharedPreferences::getBoolean, SharedPreferences::getBooleanFlow,
+            testValue = true, testDefault = false
         )
     }
 
@@ -360,10 +325,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getBooleanFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
-            SharedPreferences::getBoolean,
-            SharedPreferences::getBooleanFlow,
-            testValue = true,
-            testDefault = false
+            SharedPreferences::getBoolean, SharedPreferences::getBooleanFlow,
+            testValue = true, testDefault = false
         )
     }
 
@@ -371,10 +334,8 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `getBooleanFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
-            SharedPreferences::getBoolean,
-            SharedPreferences::getBooleanFlow,
-            testValue = true,
-            testDefault = false
+            SharedPreferences::getBoolean, SharedPreferences::getBooleanFlow,
+            testValue = true, testDefault = false
         )
     }
 
