@@ -38,23 +38,17 @@ android {
   }
 }
 
-apply from: 'publish.gradle'
-
 dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
+  api project(':preferoutines')
   api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
 
   testImplementation 'junit:junit:4.12'
   testImplementation 'org.mockito:mockito-inline:2.27.0'
   testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
-  testImplementation project(":test")
+  testImplementation project(':test')
 
   androidTestImplementation 'androidx.test.ext:junit:1.1.0'
   androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-}
-
-// Needed to use experimental @UseExperimental annotation
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-  kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
 }

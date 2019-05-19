@@ -1,4 +1,4 @@
-package drewhamilton.preferoutines
+package drewhamilton.preferoutines.test
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
@@ -13,7 +13,6 @@ import org.junit.After
 import org.junit.Before
 import kotlin.coroutines.CoroutineContext
 
-@UseExperimental(FlowPreview::class)
 abstract class FlowTest {
 
     private lateinit var testContext: CoroutineContext
@@ -38,6 +37,7 @@ abstract class FlowTest {
         testContext.cancel()
     }
 
+    @FlowPreview
     @UseExperimental(ObsoleteCoroutinesApi::class)
     protected fun <T> Flow<T>.test(): TestCollector<T> {
         val testCollector = TestCollector<T>()

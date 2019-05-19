@@ -12,7 +12,7 @@ Preferoutines is available in JCenter.
 Coming soon.
 
 ## To-do
-* Add extra extensions for enums etc.
+* Implement example app
 * Decide on method naming conventions
 * Await release of stable `Flow` API
 
