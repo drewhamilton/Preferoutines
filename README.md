@@ -8,6 +8,13 @@ Preferoutines is in pre-release. The API may undergo breaking changes before ver
 
 Preferoutines is available in JCenter.
 
+```groovy
+// Preferoutines:
+implementation "drewhamilton.preferoutines:preferoutines:$version"
+// With extra extensions, e.g. for saving enum preferences:
+implementation "drewhamilton.preferoutines:preferoutines-extras:$version"
+```
+
 ## Usage
 Coming soon.
 
