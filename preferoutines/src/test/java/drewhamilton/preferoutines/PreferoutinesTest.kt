@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import org.junit.Before
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -25,13 +25,7 @@ class PreferoutinesTest : FlowTest() {
     @Mock private lateinit var mockSharedPreferences: SharedPreferences
     @Mock private lateinit var mockSharedPreferencesEditor: SharedPreferences.Editor
 
-    @Before
-    fun setUp() {
-//        whenever(mockSharedPreferences.edit()).thenReturn(mockSharedPreferencesEditor)
-//        whenever(mockSharedPreferencesEditor.commit()).thenReturn(true)
-    }
-
-    //region Suspend functions
+    //region Suspend
     @Test
     fun `awaitAll returns map from internal preferences`() {
         val testMap = mapOf(Pair("Made up map key", 23498))
@@ -128,7 +122,7 @@ class PreferoutinesTest : FlowTest() {
     }
     //endregion
 
-    //region Flow functions
+    //region Flow
     @FlowPreview
     @Test
     fun `getAllFlow emits current value on collect`() {
@@ -511,6 +505,15 @@ class PreferoutinesTest : FlowTest() {
         testCollector.deferred.cancel()
 
         verify(mockSharedPreferences, timeout(100)).unregisterOnSharedPreferenceChangeListener(listenerCaptor.lastValue)
+    }
+    //endregion
+
+    //region Edit
+    @Test
+    fun `awaitCommit returns value from commit`() {
+        whenever(mockSharedPreferencesEditor.commit()).thenReturn(true)
+
+        runBlocking { assertTrue(mockSharedPreferencesEditor.awaitCommit()) }
     }
     //endregion
 }

@@ -106,3 +106,9 @@ private fun <T> SharedPreferences.registerCoroutinePreferenceListener(listener: 
     }
 }
 //endregion
+
+//region Edit
+suspend fun SharedPreferences.Editor.awaitCommit(): Boolean = suspendCoroutine { continuation ->
+    continuation.resume(commit())
+}
+//endregion
