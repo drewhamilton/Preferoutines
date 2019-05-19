@@ -26,6 +26,7 @@ class PreferoutinesTest : FlowTest() {
     @Mock private lateinit var mockSharedPreferences: SharedPreferences
     @Mock private lateinit var mockSharedPreferencesEditor: SharedPreferences.Editor
 
+    @Deprecated("Use extensions")
     @InjectMocks private lateinit var preferoutines: Preferoutines
 
     @Before
@@ -36,91 +37,100 @@ class PreferoutinesTest : FlowTest() {
 
     //region Suspend functions
     @Test
-    fun `getAll returns map from internal preferences`() {
+    fun `awaitAll returns map from internal preferences`() {
         val testMap = mapOf(Pair("Made up map key", 23498))
         whenever(mockSharedPreferences.all).thenReturn(testMap)
 
-        runBlocking { assertEquals(testMap, preferoutines.getAll()) }
+        runBlocking { assertEquals(testMap, mockSharedPreferences.awaitAll()) }
     }
 
     @Test
-    fun `getString returns value from internal preferences`() {
+    fun `awaitString returns value from internal preferences`() {
         val testKey = "Test string key"
         val testValue = "Test value"
         val testDefault = "Test default"
         whenever(mockSharedPreferences.getString(testKey, testDefault)).thenReturn(testValue)
 
-        runBlocking { assertEquals(testValue, preferoutines.getString(testKey, testDefault)) }
+        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitString(testKey, testDefault)) }
     }
 
     @Test
-    fun `getString returns null from internal preferences`() {
+    fun `awaitString returns null from internal preferences`() {
         val testKey = "Test string key"
         val testValue = "Test value"
         val testDefault = null
         whenever(mockSharedPreferences.getString(testKey, testDefault)).thenReturn(testDefault)
 
-        runBlocking { assertNull(preferoutines.getString(testKey, testDefault)) }
+        runBlocking { assertNull(mockSharedPreferences.awaitString(testKey, testDefault)) }
     }
 
     @Test
-    fun `getStringSet returns value from internal preferences`() {
+    fun `awaitStringSet returns value from internal preferences`() {
         val testKey = "Test string set key"
         val testValue = setOf("Test value 1", "Test value 2")
         val testDefault = setOf("Test default 1")
         whenever(mockSharedPreferences.getStringSet(testKey, testDefault)).thenReturn(testValue)
 
-        runBlocking { assertEquals(testValue, preferoutines.getStringSet(testKey, testDefault)) }
+        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitStringSet(testKey, testDefault)) }
     }
 
     @Test
-    fun `getStringSet returns null from internal preferences`() {
+    fun `awaitStringSet returns null from internal preferences`() {
         val testKey = "Test string set key"
         val testValue = setOf("Test value 1", "Test value 2")
         val testDefault = null
         whenever(mockSharedPreferences.getStringSet(testKey, testDefault)).thenReturn(testDefault)
 
-        runBlocking { assertNull(preferoutines.getStringSet(testKey, testDefault)) }
+        runBlocking { assertNull(mockSharedPreferences.awaitStringSet(testKey, testDefault)) }
     }
 
     @Test
-    fun `getInt returns value from internal preferences`() {
+    fun `awaitInt returns value from internal preferences`() {
         val testKey = "Test int key"
         val testValue = 2332
         val testDefault = -987
         whenever(mockSharedPreferences.getInt(testKey, testDefault)).thenReturn(testValue)
 
-        runBlocking { assertEquals(testValue, preferoutines.getInt(testKey, testDefault)) }
+        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitInt(testKey, testDefault)) }
     }
 
     @Test
-    fun `getLong returns value from internal preferences`() {
+    fun `awaitLong returns value from internal preferences`() {
         val testKey = "Test long key"
         val testValue = 342342342343L
         val testDefault = -38948985934859L
         whenever(mockSharedPreferences.getLong(testKey, testDefault)).thenReturn(testValue)
 
-        runBlocking { assertEquals(testValue, preferoutines.getLong(testKey, testDefault)) }
+        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitLong(testKey, testDefault)) }
     }
 
     @Test
-    fun `getFloat returns value from internal preferences`() {
+    fun `awaitFloat returns value from internal preferences`() {
         val testKey = "Test float key"
         val testValue = 234.432f
         val testDefault = -987.654f
         whenever(mockSharedPreferences.getFloat(testKey, testDefault)).thenReturn(testValue)
 
-        runBlocking { assertEquals(testValue, preferoutines.getFloat(testKey, testDefault)) }
+        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitFloat(testKey, testDefault)) }
     }
 
     @Test
-    fun `getBoolean returns value from internal preferences`() {
+    fun `awaitBoolean returns value from internal preferences`() {
         val testKey = "Test boolean key"
         val testValue = true
         val testDefault = false
         whenever(mockSharedPreferences.getBoolean(testKey, testDefault)).thenReturn(testValue)
 
-        runBlocking { assertEquals(testValue, preferoutines.getBoolean(testKey, testDefault)) }
+        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitBoolean(testKey, testDefault)) }
+    }
+
+    @Test
+    fun `awaitContains returns value from internal preferences`() {
+        val testKey = "Test key"
+        val testValue = true
+        whenever(mockSharedPreferences.contains(testKey)).thenReturn(testValue)
+
+        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitContains(testKey)) }
     }
     //endregion
 
