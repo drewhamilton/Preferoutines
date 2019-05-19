@@ -16,7 +16,6 @@ import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -25,9 +24,6 @@ class PreferoutinesTest : FlowTest() {
 
     @Mock private lateinit var mockSharedPreferences: SharedPreferences
     @Mock private lateinit var mockSharedPreferencesEditor: SharedPreferences.Editor
-
-    @Deprecated("Use extensions")
-    @InjectMocks private lateinit var preferoutines: Preferoutines
 
     @Before
     fun setUp() {
@@ -57,7 +53,6 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `awaitString returns null from internal preferences`() {
         val testKey = "Test string key"
-        val testValue = "Test value"
         val testDefault = null
         whenever(mockSharedPreferences.getString(testKey, testDefault)).thenReturn(testDefault)
 
@@ -77,7 +72,6 @@ class PreferoutinesTest : FlowTest() {
     @Test
     fun `awaitStringSet returns null from internal preferences`() {
         val testKey = "Test string set key"
-        val testValue = setOf("Test value 1", "Test value 2")
         val testDefault = null
         whenever(mockSharedPreferences.getStringSet(testKey, testDefault)).thenReturn(testDefault)
 
@@ -141,7 +135,7 @@ class PreferoutinesTest : FlowTest() {
         val testValue = mapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
         whenever(mockSharedPreferences.all).thenReturn(testValue)
 
-        val testCollector = preferoutines.getAllFlow().test()
+        val testCollector = mockSharedPreferences.getAllFlow().test()
 
         // Verify method call with timeout to allow flow initialization to complete:
         verify(mockSharedPreferences, timeout(500)).registerOnSharedPreferenceChangeListener(any())
@@ -159,7 +153,7 @@ class PreferoutinesTest : FlowTest() {
         val testValue = mapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
         whenever(mockSharedPreferences.all).thenReturn(testValue)
 
-        val testCollector = preferoutines.getAllFlow().test()
+        val testCollector = mockSharedPreferences.getAllFlow().test()
 
         val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
         verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
@@ -179,7 +173,7 @@ class PreferoutinesTest : FlowTest() {
         val testValue = mapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
         whenever(mockSharedPreferences.all).thenReturn(testValue)
 
-        val testCollector = preferoutines.getAllFlow().test()
+        val testCollector = mockSharedPreferences.getAllFlow().test()
 
         val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
         verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
@@ -197,7 +191,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getStringFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getString,
-            Preferoutines::getStringFlow,
+            SharedPreferences::getStringFlow,
             "Test value",
             "Test default"
         )
@@ -208,7 +202,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getStringFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getString,
-            Preferoutines::getStringFlow,
+            SharedPreferences::getStringFlow,
             "Test value",
             "Test default"
         )
@@ -219,7 +213,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getStringFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getString,
-            Preferoutines::getStringFlow,
+            SharedPreferences::getStringFlow,
             "Test value",
             "Test default"
         )
@@ -230,7 +224,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getStringSetFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getStringSet,
-            Preferoutines::getStringSetFlow,
+            SharedPreferences::getStringSetFlow,
             setOf("Test value 1", "Test value 2"),
             setOf("Test default 1", "Test default 2")
         )
@@ -241,7 +235,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getStringSetFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getStringSet,
-            Preferoutines::getStringSetFlow,
+            SharedPreferences::getStringSetFlow,
             setOf("Test value 1", "Test value 2"),
             setOf("Test default 1", "Test default 2")
         )
@@ -252,7 +246,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getStringSetFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getStringSet,
-            Preferoutines::getStringSetFlow,
+            SharedPreferences::getStringSetFlow,
             setOf("Test value 1", "Test value 2"),
             setOf("Test default 1", "Test default 2")
         )
@@ -263,7 +257,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getIntFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getInt,
-            Preferoutines::getIntFlow,
+            SharedPreferences::getIntFlow,
             123,
             -321
         )
@@ -274,7 +268,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getIntFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getInt,
-            Preferoutines::getIntFlow,
+            SharedPreferences::getIntFlow,
             123,
             -321
         )
@@ -285,7 +279,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getIntFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getInt,
-            Preferoutines::getIntFlow,
+            SharedPreferences::getIntFlow,
             123,
             -321
         )
@@ -296,7 +290,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getLongFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getLong,
-            Preferoutines::getLongFlow,
+            SharedPreferences::getLongFlow,
             12345678900,
             -9876543210
         )
@@ -307,7 +301,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getLongFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getLong,
-            Preferoutines::getLongFlow,
+            SharedPreferences::getLongFlow,
             12345678900,
             -9876543210
         )
@@ -318,7 +312,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getLongFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getLong,
-            Preferoutines::getLongFlow,
+            SharedPreferences::getLongFlow,
             12345678900,
             -9876543210
         )
@@ -329,7 +323,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getFloatFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getFloat,
-            Preferoutines::getFloatFlow,
+            SharedPreferences::getFloatFlow,
             123.456f,
             -321.987f
         )
@@ -340,7 +334,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getFloatFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getFloat,
-            Preferoutines::getFloatFlow,
+            SharedPreferences::getFloatFlow,
             123.456f,
             -321.987f
         )
@@ -351,7 +345,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getFloatFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getFloat,
-            Preferoutines::getFloatFlow,
+            SharedPreferences::getFloatFlow,
             123.456f,
             -321.987f
         )
@@ -362,7 +356,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getBooleanFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getBoolean,
-            Preferoutines::getBooleanFlow,
+            SharedPreferences::getBooleanFlow,
             testValue = true,
             testDefault = false
         )
@@ -373,7 +367,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getBooleanFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getBoolean,
-            Preferoutines::getBooleanFlow,
+            SharedPreferences::getBooleanFlow,
             testValue = true,
             testDefault = false
         )
@@ -384,7 +378,7 @@ class PreferoutinesTest : FlowTest() {
     fun `getBooleanFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getBoolean,
-            Preferoutines::getBooleanFlow,
+            SharedPreferences::getBooleanFlow,
             testValue = true,
             testDefault = false
         )
@@ -397,7 +391,7 @@ class PreferoutinesTest : FlowTest() {
         val testValue = true
         whenever(mockSharedPreferences.contains(testKey)).thenReturn(testValue)
 
-        val testCollector = preferoutines.getContainsFlow(testKey).test()
+        val testCollector = mockSharedPreferences.getContainsFlow(testKey).test()
 
         // Verify method call with timeout to allow flow initialization to complete:
         verify(mockSharedPreferences, timeout(500)).registerOnSharedPreferenceChangeListener(any())
@@ -416,7 +410,7 @@ class PreferoutinesTest : FlowTest() {
         val testValue = true
         whenever(mockSharedPreferences.contains(testKey)).thenReturn(testValue)
 
-        val testCollector = preferoutines.getContainsFlow(testKey).test()
+        val testCollector = mockSharedPreferences.getContainsFlow(testKey).test()
 
         val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
         verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
@@ -437,7 +431,7 @@ class PreferoutinesTest : FlowTest() {
         val testValue = true
         whenever(mockSharedPreferences.contains(testKey)).thenReturn(testValue)
 
-        val testCollector = preferoutines.getContainsFlow(testKey).test()
+        val testCollector = mockSharedPreferences.getContainsFlow(testKey).test()
 
         val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
         verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
@@ -453,14 +447,14 @@ class PreferoutinesTest : FlowTest() {
     @FlowPreview
     private fun <T> testGetPreferenceFlow_emitsCurrentValueOnCollect(
         getPreference: SharedPreferences.(String, T) -> T,
-        getPreferenceFlow: Preferoutines.(String, T) -> Flow<T>,
+        getPreferenceFlow: SharedPreferences.(String, T) -> Flow<T>,
         testValue: T,
         testDefault: T,
         testKey: String = "Test key"
     ) {
         whenever(mockSharedPreferences.getPreference(testKey, testDefault)).thenReturn(testValue)
 
-        val testCollector = preferoutines.getPreferenceFlow(testKey, testDefault).test()
+        val testCollector = mockSharedPreferences.getPreferenceFlow(testKey, testDefault).test()
 
         // Verify method call with timeout to allow flow initialization to complete:
         verify(mockSharedPreferences, timeout(500)).registerOnSharedPreferenceChangeListener(any())
@@ -475,14 +469,14 @@ class PreferoutinesTest : FlowTest() {
     @FlowPreview
     private fun <T> testGetPreferenceFlow_emitsOnListenerUpdate(
         getPreference: SharedPreferences.(String, T) -> T,
-        getPreferenceFlow: Preferoutines.(String, T) -> Flow<T>,
+        getPreferenceFlow: SharedPreferences.(String, T) -> Flow<T>,
         testValue: T,
         testDefault: T,
         testKey: String = "Test key"
     ) {
         whenever(mockSharedPreferences.getPreference(testKey, testDefault)).thenReturn(testValue)
 
-        val testCollector = preferoutines.getPreferenceFlow(testKey, testDefault).test()
+        val testCollector = mockSharedPreferences.getPreferenceFlow(testKey, testDefault).test()
 
         val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
         verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
@@ -499,14 +493,14 @@ class PreferoutinesTest : FlowTest() {
     @FlowPreview
     private inline fun <T> testGetPreferenceFlow_unregistersListenerOnCancel(
         getPreference: SharedPreferences.(String, T) -> T,
-        getPreferenceFlow: Preferoutines.(String, T) -> Flow<T>,
+        getPreferenceFlow: SharedPreferences.(String, T) -> Flow<T>,
         testValue: T,
         testDefault: T,
         testKey: String = "Test key"
     ) {
         whenever(mockSharedPreferences.getPreference(testKey, testDefault)).thenReturn(testValue)
 
-        val testCollector = preferoutines.getPreferenceFlow(testKey, testDefault).test()
+        val testCollector = mockSharedPreferences.getPreferenceFlow(testKey, testDefault).test()
 
         val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
         verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
