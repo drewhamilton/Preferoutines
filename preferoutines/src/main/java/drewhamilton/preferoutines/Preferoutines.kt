@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.flowViaChannel
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+//region Suspend
 suspend fun SharedPreferences.awaitAll(): Map<String, *> = suspendCoroutine { continuation ->
     continuation.resume(all)
 }
 
-//region Suspend
 suspend fun SharedPreferences.awaitString(key: String, defaultValue: String?) =
     awaitPreference(SharedPreferences::getString, key, defaultValue)
 
