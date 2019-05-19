@@ -8,22 +8,17 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.timeout
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import drewhamilton.preferoutines.test.FlowTest
+import drewhamilton.preferoutines.test.BasePreferoutinesTest
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class PreferoutinesTest : FlowTest() {
-
-    @Mock private lateinit var mockSharedPreferences: SharedPreferences
-    @Mock private lateinit var mockSharedPreferencesEditor: SharedPreferences.Editor
+class PreferoutinesTest : BasePreferoutinesTest() {
 
     //region Suspend
     @Test
@@ -105,18 +100,6 @@ class PreferoutinesTest : FlowTest() {
         whenever(mockSharedPreferences.contains(testKey)).thenReturn(testValue)
 
         runBlocking { assertEquals(testValue, mockSharedPreferences.awaitContains(testKey)) }
-    }
-
-    private fun <T> testAwaitPreference_returnsCorrespondingPreference(
-        getPreference: SharedPreferences.(String, T) -> T,
-        awaitPreference: suspend SharedPreferences.(String, T) -> T,
-        testValue: T,
-        testDefault: T,
-        testKey: String = "Test key"
-    ) {
-        whenever(mockSharedPreferences.getPreference(testKey, testDefault)).thenReturn(testValue)
-
-        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitPreference(testKey, testDefault)) }
     }
     //endregion
 
@@ -392,75 +375,6 @@ class PreferoutinesTest : FlowTest() {
         val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
         verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
         verify(mockSharedPreferences).contains(testKey)
-        verify(mockSharedPreferences, never()).unregisterOnSharedPreferenceChangeListener(any())
-
-        testCollector.assert { valueCount(1) }
-        testCollector.deferred.cancel()
-
-        verify(mockSharedPreferences, timeout(100)).unregisterOnSharedPreferenceChangeListener(listenerCaptor.lastValue)
-    }
-
-    @FlowPreview
-    private fun <T> testGetPreferenceFlow_emitsCurrentValueOnCollect(
-        getPreference: SharedPreferences.(String, T) -> T,
-        getPreferenceFlow: SharedPreferences.(String, T) -> Flow<T>,
-        testValue: T,
-        testDefault: T,
-        testKey: String = "Test key"
-    ) {
-        whenever(mockSharedPreferences.getPreference(testKey, testDefault)).thenReturn(testValue)
-
-        val testCollector = mockSharedPreferences.getPreferenceFlow(testKey, testDefault).test()
-
-        // Verify method call with timeout to allow flow initialization to complete:
-        verify(mockSharedPreferences, timeout(500)).registerOnSharedPreferenceChangeListener(any())
-        verify(mockSharedPreferences).getPreference(testKey, testDefault)
-
-        testCollector.assert {
-            valueCount(1)
-            values(testValue)
-        }
-    }
-
-    @FlowPreview
-    private fun <T> testGetPreferenceFlow_emitsOnListenerUpdate(
-        getPreference: SharedPreferences.(String, T) -> T,
-        getPreferenceFlow: SharedPreferences.(String, T) -> Flow<T>,
-        testValue: T,
-        testDefault: T,
-        testKey: String = "Test key"
-    ) {
-        whenever(mockSharedPreferences.getPreference(testKey, testDefault)).thenReturn(testValue)
-
-        val testCollector = mockSharedPreferences.getPreferenceFlow(testKey, testDefault).test()
-
-        val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
-        verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
-        verify(mockSharedPreferences).getPreference(testKey, testDefault)
-
-        testCollector.assert { valueCount(1) }
-
-        listenerCaptor.lastValue.onSharedPreferenceChanged(mockSharedPreferences, testKey)
-
-        verify(mockSharedPreferences, timeout(100).times(2)).getPreference(testKey, testDefault)
-        testCollector.assert { valueCount(2) }
-    }
-
-    @FlowPreview
-    private inline fun <T> testGetPreferenceFlow_unregistersListenerOnCancel(
-        getPreference: SharedPreferences.(String, T) -> T,
-        getPreferenceFlow: SharedPreferences.(String, T) -> Flow<T>,
-        testValue: T,
-        testDefault: T,
-        testKey: String = "Test key"
-    ) {
-        whenever(mockSharedPreferences.getPreference(testKey, testDefault)).thenReturn(testValue)
-
-        val testCollector = mockSharedPreferences.getPreferenceFlow(testKey, testDefault).test()
-
-        val listenerCaptor: KArgumentCaptor<SharedPreferences.OnSharedPreferenceChangeListener> = argumentCaptor()
-        verify(mockSharedPreferences, timeout(100)).registerOnSharedPreferenceChangeListener(listenerCaptor.capture())
-        verify(mockSharedPreferences).getPreference(testKey, testDefault)
         verify(mockSharedPreferences, never()).unregisterOnSharedPreferenceChangeListener(any())
 
         testCollector.assert { valueCount(1) }
