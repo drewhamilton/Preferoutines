@@ -1,12 +1,15 @@
 package drewhamilton.preferoutines.extras
 
 import android.content.SharedPreferences
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import drewhamilton.preferoutines.extras.test.TestEnum
 import drewhamilton.preferoutines.test.BasePreferoutinesTest
 import kotlinx.coroutines.FlowPreview
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertSame
 import org.junit.Test
 
 class PreferoutinesExtrasTest : BasePreferoutinesTest() {
@@ -178,6 +181,34 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
             asPreferenceValue = { name },
             testValue = TestEnum.A, testDefault = TestEnum.C
         )
+    }
+    //endregion
+
+    //region Edit
+    @Test fun `putEnum saves enum name as string preference`() {
+        val testKey = "Test enum key"
+        val testValue = TestEnum.A
+        whenever(mockSharedPreferencesEditor.putString(testKey, testValue.name))
+            .thenReturn(mockSharedPreferencesEditor)
+
+        val editor = mockSharedPreferencesEditor.putEnum(testKey, testValue)
+        verify(mockSharedPreferencesEditor).putString(testKey, testValue.name)
+        verifyNoMoreInteractions(mockSharedPreferencesEditor)
+
+        assertSame(mockSharedPreferencesEditor, editor)
+    }
+
+    @Test fun `putEnum given null saves null as string preference`() {
+        val testKey = "Test enum key"
+        val testValue: TestEnum? = null
+        whenever(mockSharedPreferencesEditor.putString(testKey, null))
+            .thenReturn(mockSharedPreferencesEditor)
+
+        val editor = mockSharedPreferencesEditor.putEnum(testKey, testValue)
+        verify(mockSharedPreferencesEditor).putString(testKey, testValue?.name)
+        verifyNoMoreInteractions(mockSharedPreferencesEditor)
+
+        assertSame(mockSharedPreferencesEditor, editor)
     }
     //endregion
 }
