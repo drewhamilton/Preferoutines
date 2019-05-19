@@ -2,18 +2,12 @@ package drewhamilton.preferoutines.extras
 
 import android.content.SharedPreferences
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.runBlocking
+import drewhamilton.preferoutines.test.BasePreferoutinesTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class)
-class PreferoutinesExtrasTest {
-
-    @Mock private lateinit var mockSharedPreferences: SharedPreferences
+class PreferoutinesExtrasTest : BasePreferoutinesTest() {
 
     //region Synchronous
     @Test
@@ -83,20 +77,6 @@ class PreferoutinesExtrasTest {
             asPreferenceValue = { name },
             testValue = TestEnum.A, testDefault = TestEnum.B
         )
-    }
-
-    private fun <P, T> testAwaitPreference_returnsCorrespondingPreference(
-        getPreference: SharedPreferences.(String, P) -> P,
-        awaitPreference: suspend SharedPreferences.(String, T) -> T,
-        @Suppress("UNCHECKED_CAST") asPreferenceValue: T.() -> P = { this as P },
-        testValue: T,
-        testDefault: T,
-        testKey: String = "Test key"
-    ) {
-        whenever(mockSharedPreferences.getPreference(testKey, testDefault.asPreferenceValue()))
-            .thenReturn(testValue.asPreferenceValue())
-
-        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitPreference(testKey, testDefault)) }
     }
     //endregion
 }
