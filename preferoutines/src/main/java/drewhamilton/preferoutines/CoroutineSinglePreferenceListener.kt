@@ -1,13 +1,12 @@
 package drewhamilton.preferoutines
 
 import android.content.SharedPreferences
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.SendChannel
 
 internal abstract class CoroutineSinglePreferenceListener<T> constructor(
     key: String,
-    private val channel: SendChannel<T>
-) : SinglePreferenceListener(key) {
+    override val channel: SendChannel<T>
+) : SinglePreferenceListener(key), CoroutinePreferenceListener<T> {
 
     final override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences) {
         channel.offer(sharedPreferences.getCurrentValue())
