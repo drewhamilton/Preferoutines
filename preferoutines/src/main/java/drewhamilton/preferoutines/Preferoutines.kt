@@ -17,6 +17,20 @@ class Preferoutines(
         continuation.resume(preferences.all)
     }
 
+    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
+    fun getAllFlow(): Flow<Map<String, *>> = flowViaChannel(CONFLATED) { channel ->
+        channel.offer(preferences.all)
+
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, _ ->
+            channel.offer(sharedPreferences.all)
+        }
+        preferences.registerOnSharedPreferenceChangeListener(listener)
+        channel.invokeOnClose {
+            preferences.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
+
     suspend fun getString(key: String, defaultValue: String?) =
         getSuspendedPreference(SharedPreferences::getString, key, defaultValue)
 
@@ -61,6 +75,22 @@ class Preferoutines(
 
     suspend fun contains(key: String): Boolean = suspendCoroutine { continuation ->
         continuation.resume(preferences.contains(key))
+    }
+
+    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
+    fun getContainsFlow(key: String): Flow<Boolean> = flowViaChannel(CONFLATED) { channel ->
+        channel.offer(preferences.contains(key))
+
+        val listener = object : SinglePreferenceListener(key) {
+            override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences) {
+                channel.offer(preferences.contains(key))
+            }
+        }
+        preferences.registerOnSharedPreferenceChangeListener(listener)
+        channel.invokeOnClose {
+            preferences.unregisterOnSharedPreferenceChangeListener(listener)
+        }
     }
 
     private suspend fun <T> getSuspendedPreference(
