@@ -1,0 +1,21 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
+
+    implementation 'junit:junit:4.12'
+    implementation 'org.mockito:mockito-inline:2.27.0'
+    implementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+// Needed to use experimental @UseExperimental annotation
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
+}

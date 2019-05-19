@@ -1,4 +1,4 @@
-package drewhamilton.preferoutines
+package drewhamilton.preferoutines.test
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
