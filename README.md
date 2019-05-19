@@ -10,7 +10,6 @@ Coming soon.
 Coming soon.
 
 ## To-do
-* Add edit functions
 * Make it public
 * Add to JCenter/Maven
 * Add extra extensions for enums etc.
