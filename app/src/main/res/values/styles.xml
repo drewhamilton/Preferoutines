@@ -2,7 +2,7 @@
 
     <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorPrimaryDark">@color/primaryLight</item>
         <item name="colorSecondary">@color/secondary</item>
 
         <item name="android:windowBackground">@drawable/gradient_orange</item>
