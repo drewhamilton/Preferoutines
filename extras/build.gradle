@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+  compileSdkVersion 28
+
+  defaultConfig {
+    minSdkVersion 14
+    targetSdkVersion 28
+    versionCode libraryVersionCode
+    versionName libraryVersion
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    consumerProguardFiles 'consumer-rules.pro'
+  }
+
+  signingConfigs {
+    release {
+      storeFile file(keystore)
+      storePassword keystorePassword
+      keyAlias keyAlias
+      keyPassword keyPassword
+    }
+  }
+
+  buildTypes {
+    release {
+      signingConfig signingConfigs.release
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+}
+
+dependencies {
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+  api project(':preferoutines')
+  api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
+
+  testImplementation 'junit:junit:4.12'
+  testImplementation 'org.mockito:mockito-inline:2.27.0'
+  testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
+
+  androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+}

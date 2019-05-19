@@ -1,2 +1,4 @@
-include ':app', ':preferoutines'
+include ':preferoutines'
+include ':extras'
+include ':app'
 rootProject.name='Preferoutines'
