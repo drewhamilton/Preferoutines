@@ -32,8 +32,8 @@ task clean(type: Delete) {
 }
 
 ext {
-  libraryVersionCode = 2
-  libraryVersion = '0.2.0'
+  libraryVersionCode = 3
+  libraryVersion = '0.2.1'
 
   keystore = project.hasProperty('personalKeystore') ?
       personalKeystore :
