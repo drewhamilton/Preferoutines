@@ -30,6 +30,10 @@ android {
 dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
+  implementation project(':preferoutines')
+  implementation project(':extras')
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1"
+
   implementation 'androidx.appcompat:appcompat:1.0.2'
   implementation 'androidx.core:core-ktx:1.0.2'
   implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
@@ -39,4 +43,9 @@ dependencies {
 
   androidTestImplementation 'androidx.test.ext:junit:1.1.0'
   androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+}
+
+// Needed to use experimental @UseExperimental annotation
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+  kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
 }
