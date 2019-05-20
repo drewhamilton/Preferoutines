@@ -5,7 +5,7 @@
     <color name="primary">@color/orange</color>
     <color name="primaryDark">@color/orange_pink_midpoint</color>
 
-    <color name="secondary">@color/pink</color>
+    <color name="secondary">@color/white</color>
     <color name="secondaryDark">@color/purple</color>
 
     <color name="orange">#f88a03</color>

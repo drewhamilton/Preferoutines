@@ -3,7 +3,7 @@
 
   <item
       android:state_enabled="false"
-      android:color="@color/blue_38_percent" />
+      android:color="@color/purple_38_percent" />
 
   <item
       android:color="@color/blue" />
