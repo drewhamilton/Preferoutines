@@ -16,10 +16,15 @@ implementation "drewhamilton.preferoutines:preferoutines-extras:$version"
 ```
 
 ## Usage
-Coming soon.
+Listen to any preference for as long as you want:
+```kotlin
+exampleScope.launch {
+    preferences.getStringFlow("Example key", "No value selected")
+        .collect { value -> textView.text = value }
+}
+```
 
 ## To-do
-* Implement example app
 * Decide on method naming conventions
 * Await release of stable `Flow` API
 
