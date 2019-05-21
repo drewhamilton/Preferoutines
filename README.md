@@ -1,5 +1,5 @@
 # Preferoutines
-A Kotlin Coroutines wrapper for Android's SharedPreferences.
+A collection of extension methods for accessing Android SharedPreferences in Kotlin coroutines.
 
 Preferoutines is in pre-release. The API may undergo breaking changes before version 1.0.0 is released.
 
