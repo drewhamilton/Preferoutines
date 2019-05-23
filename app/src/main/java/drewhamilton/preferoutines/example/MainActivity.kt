@@ -25,15 +25,17 @@ import kotlinx.android.synthetic.main.observe.stringValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @UseExperimental(FlowPreview::class)
 class MainActivity : AppCompatActivity() {
 
-    private val activityJob = Job()
-    private val activityScope = CoroutineScope(Dispatchers.Main + activityJob)
+    private val job = SupervisorJob()
+    private val coroutineContext get() = Dispatchers.Main + job
+    private val coroutineScope get() = CoroutineScope(Dispatchers.Main + job)
 
     private val preferences: SharedPreferences by lazy { getPreferences(Context.MODE_PRIVATE) }
 
@@ -51,18 +53,18 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        activityScope.launch {
+        coroutineScope.launch {
             editStringValue.setText(preferences.awaitString(Keys.EXAMPLE_STRING, Defaults.STRING))
             editIntegerValue.setText(preferences.awaitInt(Keys.EXAMPLE_INT, Defaults.INT).toString())
         }
 
-        activityScope.launch {
+        coroutineScope.launch {
             preferences.getStringFlow(Keys.EXAMPLE_STRING, Defaults.STRING)
                 .collect { value ->
                     stringValue.text = value
                 }
         }
-        activityScope.launch {
+        coroutineScope.launch {
             preferences.getIntFlow(Keys.EXAMPLE_INT, Defaults.INT)
                 .collect { value ->
                     integerValue.text = value.toString()
@@ -70,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         putButton.setOnClickListener {
-            activityScope.launch {
+            coroutineScope.launch {
                 val success = preferences.awaitEdits {
                     putString(Keys.EXAMPLE_STRING, editStringValue.textAsString.nullIfEmpty())
                     putInt(Keys.EXAMPLE_INT, editIntegerValue.textAsString.toInt())
@@ -79,7 +81,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         removeButton.setOnClickListener {
-            activityScope.launch {
+            coroutineScope.launch {
                 val success = preferences.awaitEdits {
                     remove(Keys.EXAMPLE_STRING)
                     remove(Keys.EXAMPLE_INT)
@@ -93,7 +95,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        activityJob.cancel()
+        coroutineContext.cancelChildren()
         super.onDestroy()
     }
 
