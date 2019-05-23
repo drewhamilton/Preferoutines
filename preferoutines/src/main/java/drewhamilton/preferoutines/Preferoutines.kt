@@ -95,6 +95,7 @@ private suspend fun <T> SharedPreferences.awaitPreference(
     defaultValue: T
 ): T = withContext(Dispatchers.IO) {
     suspendCoroutine<T> {
+        // TODO: remove sleep
         Thread.sleep(5000)
         it.resume(getPreference(key, defaultValue))
     }
