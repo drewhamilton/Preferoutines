@@ -1,11 +1,13 @@
 package drewhamilton.preferoutines
 
 import android.content.SharedPreferences
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowViaChannel
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -91,8 +93,11 @@ private suspend fun <T> SharedPreferences.awaitPreference(
     getPreference: SharedPreferences.(String, T) -> T,
     key: String,
     defaultValue: T
-): T = suspendCoroutine { continuation ->
-    continuation.resume(getPreference(key, defaultValue))
+): T = withContext(Dispatchers.IO) {
+    suspendCoroutine<T> {
+        Thread.sleep(5000)
+        it.resume(getPreference(key, defaultValue))
+    }
 }
 //endregion
 
