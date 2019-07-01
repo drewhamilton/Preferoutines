@@ -13,10 +13,11 @@ import org.junit.After
 import org.junit.Before
 import kotlin.coroutines.CoroutineContext
 
-abstract class FlowTest {
+abstract class CoroutineTest {
 
     private lateinit var testContext: CoroutineContext
-    private lateinit var testScope: CoroutineScope
+    protected lateinit var testScope: CoroutineScope
+        private set
 
     private val testCollectors: MutableCollection<TestCollector<*>> = mutableSetOf()
 
@@ -49,5 +50,4 @@ abstract class FlowTest {
         testCollectors.add(testCollector)
         return testCollector
     }
-
 }

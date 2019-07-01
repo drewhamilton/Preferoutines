@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Preferoutines.iml" filepath="$PROJECT_DIR$/Preferoutines.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/extras/extras.iml" filepath="$PROJECT_DIR$/extras/extras.iml" />
-      <module fileurl="file://$PROJECT_DIR$/preferoutines/preferoutines.iml" filepath="$PROJECT_DIR$/preferoutines/preferoutines.iml" />
-      <module fileurl="file://$PROJECT_DIR$/test/test.iml" filepath="$PROJECT_DIR$/test/test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Preferoutines.iml" filepath="$PROJECT_DIR$/Preferoutines.iml" group="Preferoutines" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Preferoutines/app" />
+      <module fileurl="file://$PROJECT_DIR$/extras/extras.iml" filepath="$PROJECT_DIR$/extras/extras.iml" group="Preferoutines/extras" />
+      <module fileurl="file://$PROJECT_DIR$/preferoutines/preferoutines.iml" filepath="$PROJECT_DIR$/preferoutines/preferoutines.iml" group="Preferoutines/preferoutines" />
+      <module fileurl="file://$PROJECT_DIR$/test/test.iml" filepath="$PROJECT_DIR$/test/test.iml" group="Preferoutines/test" />
     </modules>
   </component>
 </project>

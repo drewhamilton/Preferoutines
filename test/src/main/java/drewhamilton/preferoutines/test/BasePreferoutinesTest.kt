@@ -13,13 +13,14 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.Assert.assertTrue
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @Suppress("FunctionName")
 @RunWith(MockitoJUnitRunner::class)
-abstract class BasePreferoutinesTest : FlowTest() {
+abstract class BasePreferoutinesTest : CoroutineTest() {
 
     @Mock protected lateinit var mockSharedPreferences: SharedPreferences
     @Mock protected lateinit var mockSharedPreferencesEditor: SharedPreferences.Editor
@@ -43,6 +44,32 @@ abstract class BasePreferoutinesTest : FlowTest() {
             .thenReturn(testValue.asPreferenceValue())
 
         runBlocking { Assert.assertEquals(testValue, mockSharedPreferences.awaitPreference(testKey, testDefault)) }
+    }
+
+    protected fun <T, P> testAwaitPreference_doesNotBlockCaller(
+        getPreference: SharedPreferences.(String, P) -> P,
+        awaitPreference: suspend SharedPreferences.(String, T) -> T,
+        asPreferenceValue: T.() -> P = @Suppress("UNCHECKED_CAST") { this as P },
+        testValue: T,
+        testDefault: T,
+        testKey: String = "Test key"
+    ) {
+        var prefMilli = Long.MIN_VALUE
+        whenever(mockSharedPreferences.getPreference(testKey, testDefault.asPreferenceValue()))
+            .thenAnswer {
+                Thread.sleep(PREFERENCES_INTERNAL_DELAY)
+                prefMilli = System.currentTimeMillis()
+                testValue.asPreferenceValue()
+            }
+
+        var continuedMilli = Long.MAX_VALUE
+
+        runBlocking {
+            mockSharedPreferences.awaitPreference(testKey, testDefault)
+            continuedMilli = System.currentTimeMillis()
+        }
+
+        assertTrue("$prefMilli is not greater than $continuedMilli", prefMilli > continuedMilli)
     }
     //endregion
 
@@ -119,5 +146,10 @@ abstract class BasePreferoutinesTest : FlowTest() {
         testCollector.deferred.cancel()
 
         verify(mockSharedPreferences, timeout(100)).unregisterOnSharedPreferenceChangeListener(listenerCaptor.lastValue)
+    }
+
+    private companion object {
+        private const val PREFERENCES_INTERNAL_DELAY = 1000L
+        private const val TEST_DELAY = 2 * PREFERENCES_INTERNAL_DELAY
     }
 }

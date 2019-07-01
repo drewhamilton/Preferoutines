@@ -32,6 +32,13 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
+    @Test fun `awaitString gets value asynchronously`() {
+        testAwaitPreference_doesNotBlockCaller(
+            SharedPreferences::getString, SharedPreferences::awaitString,
+            testValue = "Test value", testDefault = "Test default"
+        )
+    }
+
     @Test fun `awaitString returns null from getString`() {
         testAwaitPreference_returnsCorrespondingPreference(
             SharedPreferences::getString, SharedPreferences::awaitString,
