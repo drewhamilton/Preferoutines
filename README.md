@@ -1,4 +1,6 @@
 # Preferoutines
+[ ![Build Status](https://travis-ci.org/drewhamilton/Preferoutines.svg?branch=master) ](https://travis-ci.org/drewhamilton/Preferoutines)
+
 A collection of extension methods for accessing Android SharedPreferences in Kotlin coroutines.
 
 Preferoutines is in pre-release. The API may undergo breaking changes before version 1.0.0 is released.
