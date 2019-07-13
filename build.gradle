@@ -38,7 +38,7 @@ allprojects { project ->
 }
 
 ext {
-  libraryVersion = '0.2.1x'
+  libraryVersion = '0.3.0'
   compatibleVersion = '0.2.1'
   failIfIncompatible = false
 
