@@ -93,7 +93,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
     //region Flow
     @FlowPreview
     @Test fun `getAllFlow emits current value on collect`() {
-        val testValue = mapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
+        val testValue = mutableMapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
         whenever(mockSharedPreferences.all).thenReturn(testValue)
 
         val testCollector = mockSharedPreferences.getAllFlow().test()
@@ -110,7 +110,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
 
     @FlowPreview
     @Test fun `getAllFlow emits on listener update`() {
-        val testValue = mapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
+        val testValue = mutableMapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
         whenever(mockSharedPreferences.all).thenReturn(testValue)
 
         val testCollector = mockSharedPreferences.getAllFlow().test()
@@ -129,7 +129,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
 
     @FlowPreview
     @Test fun `getAllFlow unregisters listener on cancel`() {
-        val testValue = mapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
+        val testValue = mutableMapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
         whenever(mockSharedPreferences.all).thenReturn(testValue)
 
         val testCollector = mockSharedPreferences.getAllFlow().test()
