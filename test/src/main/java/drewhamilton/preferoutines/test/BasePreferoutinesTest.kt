@@ -11,8 +11,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.runBlocking
-import org.junit.Assert
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
@@ -29,22 +27,6 @@ abstract class BasePreferoutinesTest : FlowTest() {
         whenever(mockSharedPreferences.edit()).thenReturn(mockSharedPreferencesEditor)
         whenever(mockSharedPreferencesEditor.commit()).thenReturn(true)
     }
-
-    //region Suspend
-    protected fun <T, P> testAwaitPreference_returnsCorrespondingPreference(
-        getPreference: SharedPreferences.(String, P) -> P,
-        awaitPreference: suspend SharedPreferences.(String, T) -> T,
-        asPreferenceValue: T.() -> P = @Suppress("UNCHECKED_CAST") { this as P },
-        testValue: T,
-        testDefault: T,
-        testKey: String = "Test key"
-    ) {
-        whenever(mockSharedPreferences.getPreference(testKey, testDefault.asPreferenceValue()))
-            .thenReturn(testValue.asPreferenceValue())
-
-        runBlocking { Assert.assertEquals(testValue, mockSharedPreferences.awaitPreference(testKey, testDefault)) }
-    }
-    //endregion
 
     @FlowPreview
     protected fun <T, P> testGetPreferenceFlow_emitsCurrentValueOnCollect(

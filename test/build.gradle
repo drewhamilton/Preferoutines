@@ -41,6 +41,10 @@ android {
         // Needed to use experimental @UseExperimental annotation:
         freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
     }
+
+    lintOptions {
+        lintConfig file('lint.xml')
+    }
 }
 
 dependencies {

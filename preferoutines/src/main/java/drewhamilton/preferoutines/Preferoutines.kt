@@ -6,95 +6,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowViaChannel
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
-
-//region Suspend
-
-/**
- * Retrieve all values from the preferences.
- * 
- * @return a map containing a list of pairs key/value representing the preferences.
- */
-suspend fun SharedPreferences.awaitAll(): Map<String, *> = suspendCoroutine { continuation ->
-    continuation.resume(all)
-}
-
-/**
- * Retrieve a string value from the preferences.
- * 
- * Retrieve the value associated with [key], if it exists.
- * @return the preference value if it exists, otherwise the given [defaultValue].
- * @throws ClassCastException if there is a preference with this name that is not a String.
- */
-suspend fun SharedPreferences.awaitString(key: String, defaultValue: String?) =
-    awaitPreference(SharedPreferences::getString, key, defaultValue)
-
-/**
- * Retrieve a set of String values from the preferences.
- *
- * Retrieve the set associated with [key], if it exists.
- * @return the preference value if it exists, otherwise the given [defaultValue].
- * @throws ClassCastException if there is a preference with this name that is not a {@link Set}.
- */
-suspend fun SharedPreferences.awaitStringSet(key: String, defaultValue: Set<String>?) =
-    awaitPreference(SharedPreferences::getStringSet, key, defaultValue)
-
-/**
- * Retrieve an int value from the preferences.
- *
- * Retrieve the value associated with [key], if it exists.
- * @return the preference value if it exists, otherwise the given [defaultValue].
- * @throws ClassCastException if there is a preference with this name that is not an int.
- */
-suspend fun SharedPreferences.awaitInt(key: String, defaultValue: Int) =
-    awaitPreference(SharedPreferences::getInt, key, defaultValue)
-
-/**
- * Retrieve a long value from the preferences.
- *
- * Retrieve the value associated with [key], if it exists.
- * @return the preference value if it exists, otherwise the given [defaultValue].
- * @throws ClassCastException if there is a preference with this name that is not a long.
- */
-suspend fun SharedPreferences.awaitLong(key: String, defaultValue: Long) =
-    awaitPreference(SharedPreferences::getLong, key, defaultValue)
-
-/**
- * Retrieve a float value from the preferences.
- *
- * Retrieve the value associated with [key], if it exists.
- * @return the preference value if it exists, otherwise the given [defaultValue].
- * @throws ClassCastException if there is a preference with this name that is not a float.
- */
-suspend fun SharedPreferences.awaitFloat(key: String, defaultValue: Float) =
-    awaitPreference(SharedPreferences::getFloat, key, defaultValue)
-
-/**
- * Retrieve a boolean value from the preferences.
- *
- * Retrieve the value associated with [key], if it exists.
- * @return the preference value if it exists, otherwise the given [defaultValue].
- * @throws ClassCastException if there is a preference with this name that is not a boolean.
- */
-suspend fun SharedPreferences.awaitBoolean(key: String, defaultValue: Boolean) =
-    awaitPreference(SharedPreferences::getBoolean, key, defaultValue)
-
-/**
- * Check whether the preferences contains a value for the given [key].
- */
-suspend fun SharedPreferences.awaitContains(key: String): Boolean = suspendCoroutine { continuation ->
-    continuation.resume(contains(key))
-}
-
-private suspend fun <T> SharedPreferences.awaitPreference(
-    getPreference: SharedPreferences.(String, T) -> T,
-    key: String,
-    defaultValue: T
-): T = suspendCoroutine { continuation ->
-    continuation.resume(getPreference(key, defaultValue))
-}
-//endregion
 
 //region Flow
 
@@ -217,21 +128,6 @@ private fun <T> SharedPreferences.registerCoroutinePreferenceListener(listener: 
     listener.channel.invokeOnClose {
         unregisterOnSharedPreferenceChangeListener(listener)
     }
-}
-
-//endregion
-
-//region Edit
-
-/**
- * Commit your preferences changes in a suspending fashion. This atomically performs the requested modifications,
- * replacing whatever is currently in the preferences.
- * 
- * Note that when two editors are modifying preferences at the same time, the last one to call commit wins.
- * @return true if the new values were successfully written to persistent storage.
- */
-suspend fun SharedPreferences.Editor.awaitCommit(): Boolean = suspendCoroutine { continuation ->
-    continuation.resume(commit())
 }
 
 //endregion

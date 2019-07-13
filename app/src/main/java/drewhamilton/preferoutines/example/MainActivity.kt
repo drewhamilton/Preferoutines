@@ -11,9 +11,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import com.google.android.material.snackbar.Snackbar
-import drewhamilton.preferoutines.awaitInt
-import drewhamilton.preferoutines.awaitString
-import drewhamilton.preferoutines.extras.awaitEdits
 import drewhamilton.preferoutines.getIntFlow
 import drewhamilton.preferoutines.getStringFlow
 import kotlinx.android.synthetic.main.edit.editIntegerValue
@@ -28,6 +25,8 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 @UseExperimental(FlowPreview::class)
@@ -54,8 +53,17 @@ class MainActivity : AppCompatActivity() {
         })
 
         coroutineScope.launch {
-            editStringValue.setText(preferences.awaitString(Keys.EXAMPLE_STRING, Defaults.STRING))
-            editIntegerValue.setText(preferences.awaitInt(Keys.EXAMPLE_INT, Defaults.INT).toString())
+            editStringValue.setText(
+                preferences.getStringFlow(Keys.EXAMPLE_STRING, Defaults.STRING)
+                    .take(1)
+                    .single()
+            )
+            editIntegerValue.setText(
+                preferences.getIntFlow(Keys.EXAMPLE_INT, Defaults.INT)
+                    .take(1)
+                    .single()
+                    .toString()
+            )
         }
 
         coroutineScope.launch {
@@ -73,19 +81,19 @@ class MainActivity : AppCompatActivity() {
 
         putButton.setOnClickListener {
             coroutineScope.launch {
-                val success = preferences.awaitEdits {
-                    putString(Keys.EXAMPLE_STRING, editStringValue.textAsString.nullIfEmpty())
-                    putInt(Keys.EXAMPLE_INT, editIntegerValue.textAsString.toInt())
-                }
+                val success = preferences.edit()
+                    .putString(Keys.EXAMPLE_STRING, editStringValue.textAsString.nullIfEmpty())
+                    .putInt(Keys.EXAMPLE_INT, editIntegerValue.textAsString.toInt())
+                    .commit()
                 if (!success) displayError()
             }
         }
         removeButton.setOnClickListener {
             coroutineScope.launch {
-                val success = preferences.awaitEdits {
-                    remove(Keys.EXAMPLE_STRING)
-                    remove(Keys.EXAMPLE_INT)
-                }
+                val success = preferences.edit()
+                    .remove(Keys.EXAMPLE_STRING)
+                    .remove(Keys.EXAMPLE_INT)
+                    .commit()
                 if (success) {
                     editStringValue.text = null
                     editIntegerValue.setText(Defaults.INT.toString())
