@@ -1,7 +1,6 @@
 package drewhamilton.preferoutines.extras
 
 import android.content.SharedPreferences
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -11,16 +10,9 @@ import kotlinx.coroutines.FlowPreview
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
-import org.junit.Before
 import org.junit.Test
 
 class PreferoutinesExtrasTest : BasePreferoutinesTest() {
-
-    @Before
-    fun setUp() {
-        setUpMockEditor()
-        whenever(mockSharedPreferencesEditor.putInt(any(), any())).thenReturn(mockSharedPreferencesEditor)
-    }
 
     //region Synchronous
     @Test
