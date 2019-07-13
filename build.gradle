@@ -6,6 +6,8 @@ buildscript {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.18"
 
+    classpath 'me.champeau.gradle:japicmp-gradle-plugin:0.2.8'
+
     classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
   }
@@ -13,6 +15,7 @@ buildscript {
   repositories {
     google()
     mavenCentral()
+    gradlePluginPortal()
     jcenter()
 
   }
@@ -35,7 +38,9 @@ allprojects { project ->
 }
 
 ext {
-  libraryVersion = '0.2.1'
+  libraryVersion = '0.2.1x'
+  compatibleVersion = '0.2.1'
+  failIfIncompatible = false
 
   targetSdk = 28
   minSdk = 14
