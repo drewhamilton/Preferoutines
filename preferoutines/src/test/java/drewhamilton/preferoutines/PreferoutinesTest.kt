@@ -10,85 +10,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import drewhamilton.preferoutines.test.BasePreferoutinesTest
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PreferoutinesTest : BasePreferoutinesTest() {
-
-    //region Suspend
-    @Test fun `awaitAll returns map from getAll`() {
-        val testMap = mapOf(Pair("Made up map key", 23498))
-        whenever(mockSharedPreferences.all).thenReturn(testMap)
-
-        runBlocking { assertEquals(testMap, mockSharedPreferences.awaitAll()) }
-    }
-
-    @Test fun `awaitString returns value from getString`() {
-        testAwaitPreference_returnsCorrespondingPreference(
-            SharedPreferences::getString, SharedPreferences::awaitString,
-            testValue = "Test value", testDefault = "Test default"
-        )
-    }
-
-    @Test fun `awaitString returns null from getString`() {
-        testAwaitPreference_returnsCorrespondingPreference(
-            SharedPreferences::getString, SharedPreferences::awaitString,
-            testValue = null, testDefault = null
-        )
-    }
-
-    @Test fun `awaitStringSet returns value from getStringSet`() {
-        testAwaitPreference_returnsCorrespondingPreference(
-            SharedPreferences::getStringSet, SharedPreferences::awaitStringSet,
-            testValue = setOf("Test value 1", "Test value 2"), testDefault = setOf("Test default 1")
-        )
-    }
-
-    @Test fun `awaitStringSet returns null from getStringSet`() {
-        testAwaitPreference_returnsCorrespondingPreference(
-            SharedPreferences::getStringSet, SharedPreferences::awaitStringSet,
-            testValue = null, testDefault = null
-        )
-    }
-
-    @Test fun `awaitInt returns value from getInt`() {
-        testAwaitPreference_returnsCorrespondingPreference(
-            SharedPreferences::getInt, SharedPreferences::awaitInt,
-            testValue = 2332, testDefault = -987
-        )
-    }
-
-    @Test fun `awaitLong returns value from getLong`() {
-        testAwaitPreference_returnsCorrespondingPreference(
-            SharedPreferences::getLong, SharedPreferences::awaitLong,
-            testValue = 342342342343L, testDefault = -38948985934859L
-        )
-    }
-
-    @Test fun `awaitFloat returns value from getFloat`() {
-        testAwaitPreference_returnsCorrespondingPreference(
-            SharedPreferences::getFloat, SharedPreferences::awaitFloat,
-            testValue = 234.432f, testDefault = -987.654f
-        )
-    }
-
-    @Test fun `awaitBoolean returns value from getBoolean`() {
-        testAwaitPreference_returnsCorrespondingPreference(
-            SharedPreferences::getBoolean, SharedPreferences::awaitBoolean,
-            testValue = true, testDefault = false
-        )
-    }
-
-    @Test fun `awaitContains returns value from contains`() {
-        val testKey = "Test key"
-        val testValue = true
-        whenever(mockSharedPreferences.contains(testKey)).thenReturn(testValue)
-
-        runBlocking { assertEquals(testValue, mockSharedPreferences.awaitContains(testKey)) }
-    }
-    //endregion
 
     //region Flow
     @FlowPreview
@@ -344,14 +268,6 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         testCollector.deferred.cancel()
 
         verify(mockSharedPreferences, timeout(100)).unregisterOnSharedPreferenceChangeListener(listenerCaptor.lastValue)
-    }
-    //endregion
-
-    //region Edit
-    @Test fun `awaitCommit returns value from commit`() {
-        whenever(mockSharedPreferencesEditor.commit()).thenReturn(true)
-
-        runBlocking { assertTrue(mockSharedPreferencesEditor.awaitCommit()) }
     }
     //endregion
 }

@@ -1,9 +1,6 @@
 package drewhamilton.preferoutines.extras
 
 import android.content.SharedPreferences
-import drewhamilton.preferoutines.awaitCommit
-import drewhamilton.preferoutines.awaitString
-import drewhamilton.preferoutines.awaitStringSet
 import drewhamilton.preferoutines.getStringFlow
 import drewhamilton.preferoutines.getStringSetFlow
 import kotlinx.coroutines.FlowPreview
@@ -26,53 +23,6 @@ inline fun <reified E : Enum<E>> SharedPreferences.getEnum(key: String, defaultV
     val name = getString(key, defaultValue?.name)
     return name?.let { enumValueOf<E>(it) }
 }
-//endregion
-
-//region Suspend
-
-/**
- * Retrieve a string value from the preferences. Since [defaultValue] is not null, the return value won't be null.
- *
- * Retrieve the value associated with [key], if it exists.
- * @return the preference value if it exists, otherwise the given [defaultValue].
- * @throws ClassCastException if there is a preference with this name that is not a String.
- */
-suspend fun SharedPreferences.awaitNonNullString(key: String, defaultValue: String): String =
-    awaitString(key, defaultValue)!!
-
-/**
- * Retrieve a set of String values from the preferences. Since [defaultValue] is not null, the returned set won't be
- * null.
- *
- * Retrieve the set associated with [key], if it exists.
- * @return the preference value if it exists, otherwise the given [defaultValue].
- * @throws ClassCastException if there is a preference with this name that is not a {@link Set}.
- */
-suspend fun SharedPreferences.awaitNonNullStringSet(key: String, defaultValue: Set<String>): Set<String> =
-    awaitStringSet(key, defaultValue)!!
-
-/**
- * Retrieve an enum value by [Enum.name] from the preferences.
- *
- * Retrieve the value associated with [key], if it exists.
- * @return the preference value if it exists, otherwise the given [defaultValue].
- * @throws ClassCastException if there is a preference with this name that is not a String.
- */
-suspend inline fun <reified E : Enum<E>> SharedPreferences.awaitEnum(key: String, defaultValue: E?): E? {
-    val name = awaitString(key, defaultValue?.name)
-    return name?.let { enumValueOf<E>(it) }
-}
-
-/**
- * Retrieve an enum value by [Enum.name] from the preferences. Since [defaultValue] is not null, the return value won't
- * be null.
- *
- * Retrieve the value associated with [key], if it exists.
- * @return the preference value if it exists, otherwise the given [defaultValue].
- * @throws ClassCastException if there is a preference with this name that is not a String.
- */
-suspend inline fun <reified E : Enum<E>> SharedPreferences.awaitNonNullEnum(key: String, defaultValue: E): E =
-    awaitEnum(key, defaultValue)!!
 //endregion
 
 //region Flow
@@ -137,16 +87,6 @@ inline fun <reified E : Enum<E>> SharedPreferences.getNonNullEnumFlow(key: Strin
 //endregion
 
 //region Edit
-
-/**
- * Apply a series of [edits] to the preferences and then commit them in a suspending fashiong.
- *
- * Note that calls to [SharedPreferences.Editor.remove] and [SharedPreferences.Editor.clear] are executed first,
- * regardless of what order they appear in the series of edits.
- * @return true if the new values were successfully written to persistent storage.
- */
-suspend inline fun SharedPreferences.awaitEdits(edits: SharedPreferences.Editor.() -> SharedPreferences.Editor) =
-    edits.invoke(this.edit()).awaitCommit()
 
 /**
  * Set an enum value associated with [key] in the preferences editor, to be written as string [Enum.name] once
