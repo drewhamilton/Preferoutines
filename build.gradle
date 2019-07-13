@@ -27,8 +27,10 @@ allprojects {
 }
 
 ext {
-  libraryVersionCode = 3
   libraryVersion = '0.2.1'
+
+  targetSdk = 28
+  minSdk = 14
 
   keystore = project.hasProperty('personalKeystore') ? personalKeystore : 'dummy'
   keystorePassword = project.hasProperty('personalKeystorePassword') ? personalKeystorePassword : 'dummy'
