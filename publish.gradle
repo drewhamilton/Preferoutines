@@ -3,12 +3,8 @@ apply plugin: 'com.jfrog.bintray'
 
 ext {
   bintrayRepo = 'Preferoutines'
-  bintrayUser = project.hasProperty('personalBintrayUsername') ?
-      personalBintrayUsername :
-      System.getenv('personalBintrayUsername')
-  bintrayKey = project.hasProperty('personalBintrayApiKey') ?
-      personalBintrayApiKey :
-      System.getenv('personalBintrayApiKey')
+  bintrayUser = project.hasProperty('personalBintrayUsername') ? personalBintrayUsername : 'dummy'
+  bintrayKey = project.hasProperty('personalBintrayApiKey') ? personalBintrayApiKey : 'dummy'
 
   publishedGroupId = 'drewhamilton.preferoutines'
 
