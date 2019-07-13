@@ -3,7 +3,6 @@ apply from: '../publish.gradle'
 ext {
   bintrayName = 'Preferoutines-Extras'
   libraryName = 'Preferoutines Extras'
-  artifact = 'preferoutines-extras'
 
   libraryDescription = 'Extra extensions for using SharedPreferences with coroutines.'
 }
