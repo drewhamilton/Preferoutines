@@ -1,0 +1,22 @@
+# Only build master branch (leave other branch builds up to PRs)
+branches:
+  only:
+    - master
+
+language: android
+
+jdk:
+  - oraclejdk8
+
+env:
+  matrix:
+    - ANDROID_TARGET=android-28
+
+android:
+  components:
+    - build-tools-28.0.3
+    - $ANDROID_TARGET
+
+install: ./gradlew clean assemble --stacktrace
+
+script: ./gradlew check --stacktrace
