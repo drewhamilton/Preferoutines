@@ -1,5 +1,5 @@
 # Preferoutines
-[ ![Build Status](https://travis-ci.org/drewhamilton/Preferoutines.svg?branch=master) ](https://travis-ci.org/drewhamilton/Preferoutines)
+[ ![Build status](https://travis-ci.org/drewhamilton/Preferoutines.svg?branch=master) ](https://travis-ci.org/drewhamilton/Preferoutines)
 
 A collection of extension methods for accessing Android SharedPreferences in Kotlin coroutines.
 
@@ -19,17 +19,24 @@ implementation "drewhamilton.preferoutines:preferoutines-extras:$version"
 ```
 
 ## Usage
+
+### Preferoutines
 Listen to any preference for as long as you want:
 ```kotlin
 exampleScope.launch {
-    preferences.getStringFlow("Example key", "No value selected")
-        .collect { value -> textView.text = value }
+    preferences.getStringFlow("Name", "<None>")
+        .collect { name -> nameView.text = name }
 }
 ```
 
-## To-do
-* Decide on method naming conventions
-* Await release of stable `Flow` API
+### Extras
+Smoothly handle some common cases with extra extensions for enums and non-nullable String and enum values.
+```kotlin
+exampleScope.launch {
+    preferences.getNonNullEnumFlow("Theme", Theme.LIGHT)
+        .collect { theme -> setTheme(theme.resource) }
+}
+```
 
 ## License
 ```

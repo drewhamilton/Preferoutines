@@ -8,8 +8,8 @@ class TestCollector<T> {
 
     fun assert(assertions: Assert.() -> Unit) {
         // TODO WORKAROUND: Short sleep avoids race condition where values have not yet propagated at time of assertion
-        Thread.sleep(1)
-        assertions.invoke(Assert())
+        Thread.sleep(2)
+        Assert().assertions()
     }
 
     inner class Assert internal constructor() {
