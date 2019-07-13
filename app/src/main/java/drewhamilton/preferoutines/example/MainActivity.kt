@@ -35,14 +35,12 @@ class MainActivity : AppCompatActivity() {
     private val activityJob = Job()
     private val activityScope = CoroutineScope(Dispatchers.Main + activityJob)
 
-    private lateinit var preferences: SharedPreferences
+    private val preferences: SharedPreferences by lazy { getPreferences(Context.MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         applyNoLimits()
         setContentView(R.layout.main)
-
-        preferences = getPreferences(Context.MODE_PRIVATE)
 
         editIntegerValue.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
