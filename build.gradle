@@ -38,9 +38,9 @@ allprojects { project ->
 }
 
 ext {
-  libraryVersion = '0.3.0'
-  compatibleVersion = '0.2.1'
-  failIfIncompatible = false
+  libraryVersion = '0.3.x'
+  compatibleVersion = '0.3.0'
+  failIfIncompatible = true
 
   targetSdk = 28
   minSdk = 14
