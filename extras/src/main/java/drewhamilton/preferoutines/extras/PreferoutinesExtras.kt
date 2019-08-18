@@ -3,7 +3,7 @@ package drewhamilton.preferoutines.extras
 import android.content.SharedPreferences
 import drewhamilton.preferoutines.getStringFlow
 import drewhamilton.preferoutines.getStringSetFlow
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -36,7 +36,7 @@ inline fun <reified E : Enum<E>> SharedPreferences.getEnum(key: String, defaultV
  * [defaultValue] is emitted.
  * @throws ClassCastException if there is a preference with this name that is not a String.
  */
-@FlowPreview
+@ExperimentalCoroutinesApi
 fun SharedPreferences.getNonNullStringFlow(key: String, defaultValue: String): Flow<String> =
     getStringFlow(key, defaultValue)
         .map { it!! }
@@ -50,7 +50,7 @@ fun SharedPreferences.getNonNullStringFlow(key: String, defaultValue: String): F
  * [defaultValue] is emitted.
  * @throws ClassCastException if there is a preference with this name that is not a {@link Set}.
  */
-@FlowPreview
+@ExperimentalCoroutinesApi
 fun SharedPreferences.getNonNullStringSetFlow(key: String, defaultValue: Set<String>): Flow<Set<String>> =
     getStringSetFlow(key, defaultValue)
         .map { it!! }
@@ -63,7 +63,7 @@ fun SharedPreferences.getNonNullStringSetFlow(key: String, defaultValue: Set<Str
  * [defaultValue] is emitted.
  * @throws ClassCastException if there is a preference with this name that is not a String.
  */
-@FlowPreview
+@ExperimentalCoroutinesApi
 inline fun <reified E : Enum<E>> SharedPreferences.getEnumFlow(key: String, defaultValue: E?): Flow<E?> =
     getStringFlow(key, defaultValue?.name)
         .map { name ->
@@ -79,7 +79,7 @@ inline fun <reified E : Enum<E>> SharedPreferences.getEnumFlow(key: String, defa
  * [defaultValue] is emitted.
  * @throws ClassCastException if there is a preference with this name that is not a String.
  */
-@FlowPreview
+@ExperimentalCoroutinesApi
 inline fun <reified E : Enum<E>> SharedPreferences.getNonNullEnumFlow(key: String, defaultValue: E): Flow<E> =
     getEnumFlow(key, defaultValue)
         .map { it!! }

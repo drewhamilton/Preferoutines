@@ -1,9 +1,11 @@
 package drewhamilton.preferoutines
 
 import android.content.SharedPreferences
-import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.ProducerScope
 
 internal interface CoroutinePreferenceListener<T> : SharedPreferences.OnSharedPreferenceChangeListener {
 
-    val channel: SendChannel<T>
+    @ExperimentalCoroutinesApi
+    val channel: ProducerScope<T>
 }

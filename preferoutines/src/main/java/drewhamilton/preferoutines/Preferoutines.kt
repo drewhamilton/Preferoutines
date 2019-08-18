@@ -2,10 +2,9 @@ package drewhamilton.preferoutines
 
 import android.content.SharedPreferences
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowViaChannel
+import kotlinx.coroutines.flow.callbackFlow
 
 //region Flow
 
@@ -15,11 +14,10 @@ import kotlinx.coroutines.flow.flowViaChannel
  * @return a [Flow] that emits a map containing a list of key/value pairs representing the preferences each time any of
  * the preferences change.
  */
-@FlowPreview
-fun SharedPreferences.getAllFlow(): Flow<Map<String, *>> = flowViaChannel(CONFLATED) { channel ->
-    channel.offer(all)
-
-    val listener = CoroutineAllPreferenceListener(channel)
+@ExperimentalCoroutinesApi
+fun SharedPreferences.getAllFlow(): Flow<Map<String, *>> = callbackFlow {
+    offer(all)
+    val listener = CoroutineAllPreferenceListener(this)
     registerCoroutinePreferenceListener(listener)
 }
 
@@ -31,7 +29,7 @@ fun SharedPreferences.getAllFlow(): Flow<Map<String, *>> = flowViaChannel(CONFLA
  * [defaultValue] is emitted.
  * @throws ClassCastException if there is a preference with this name that is not a String.
  */
-@FlowPreview
+@ExperimentalCoroutinesApi
 fun SharedPreferences.getStringFlow(key: String, defaultValue: String?) =
     getPreferenceFlow(SharedPreferences::getString, key, defaultValue)
 
@@ -43,7 +41,7 @@ fun SharedPreferences.getStringFlow(key: String, defaultValue: String?) =
  * [defaultValue] is emitted.
  * @throws ClassCastException if there is a preference with this name that is not a {@link Set}.
  */
-@FlowPreview
+@ExperimentalCoroutinesApi
 fun SharedPreferences.getStringSetFlow(key: String, defaultValue: Set<String>?) =
     getPreferenceFlow(SharedPreferences::getStringSet, key, defaultValue)
 
@@ -55,7 +53,7 @@ fun SharedPreferences.getStringSetFlow(key: String, defaultValue: Set<String>?) 
  * [defaultValue] is emitted.
  * @throws ClassCastException if there is a preference with this name that is not an int.
  */
-@FlowPreview
+@ExperimentalCoroutinesApi
 fun SharedPreferences.getIntFlow(key: String, defaultValue: Int) =
     getPreferenceFlow(SharedPreferences::getInt, key, defaultValue)
 
@@ -67,7 +65,7 @@ fun SharedPreferences.getIntFlow(key: String, defaultValue: Int) =
  * [defaultValue] is emitted.
  * @throws ClassCastException if there is a preference with this name that is not a long.
  */
-@FlowPreview
+@ExperimentalCoroutinesApi
 fun SharedPreferences.getLongFlow(key: String, defaultValue: Long) =
     getPreferenceFlow(SharedPreferences::getLong, key, defaultValue)
 
@@ -79,7 +77,7 @@ fun SharedPreferences.getLongFlow(key: String, defaultValue: Long) =
  * [defaultValue] is emitted.
  * @throws ClassCastException if there is a preference with this name that is not a float.
  */
-@FlowPreview
+@ExperimentalCoroutinesApi
 fun SharedPreferences.getFloatFlow(key: String, defaultValue: Float) =
     getPreferenceFlow(SharedPreferences::getFloat, key, defaultValue)
 
@@ -91,7 +89,7 @@ fun SharedPreferences.getFloatFlow(key: String, defaultValue: Float) =
  * [defaultValue] is emitted.
  * @throws ClassCastException if there is a preference with this name that is not a boolean.
  */
-@FlowPreview
+@ExperimentalCoroutinesApi
 fun SharedPreferences.getBooleanFlow(key: String, defaultValue: Boolean) =
     getPreferenceFlow(SharedPreferences::getBoolean, key, defaultValue)
 
@@ -102,30 +100,30 @@ fun SharedPreferences.getBooleanFlow(key: String, defaultValue: Boolean) =
  * each time the preference is changed.
  * @throws ClassCastException if there is a preference with this name that is not a long.
  */
-@FlowPreview
-fun SharedPreferences.getContainsFlow(key: String): Flow<Boolean> = flowViaChannel(CONFLATED) { channel ->
-    channel.offer(contains(key))
+@ExperimentalCoroutinesApi
+fun SharedPreferences.getContainsFlow(key: String): Flow<Boolean> = callbackFlow {
+    offer(contains(key))
 
-    val listener = CoroutineSinglePreferenceContainsListener(key, channel)
+    val listener = CoroutineSinglePreferenceContainsListener(key, this)
     registerCoroutinePreferenceListener(listener)
 }
 
-@FlowPreview
+@ExperimentalCoroutinesApi
 private fun <T> SharedPreferences.getPreferenceFlow(
     getPreference: SharedPreferences.(String, T) -> T,
     key: String,
     defaultValue: T
-): Flow<T> = flowViaChannel(CONFLATED) { channel ->
-    channel.offer(getPreference(key, defaultValue))
+): Flow<T> = callbackFlow {
+    offer(getPreference(key, defaultValue))
 
-    val listener = CoroutineSinglePreferenceChangeListener(key, channel, defaultValue, getPreference)
+    val listener = CoroutineSinglePreferenceChangeListener(key, this, defaultValue, getPreference)
     registerCoroutinePreferenceListener(listener)
 }
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
-private fun <T> SharedPreferences.registerCoroutinePreferenceListener(listener: CoroutinePreferenceListener<T>) {
+private suspend fun <T> SharedPreferences.registerCoroutinePreferenceListener(listener: CoroutinePreferenceListener<T>) {
     registerOnSharedPreferenceChangeListener(listener)
-    listener.channel.invokeOnClose {
+    listener.channel.awaitClose {
         unregisterOnSharedPreferenceChangeListener(listener)
     }
 }
