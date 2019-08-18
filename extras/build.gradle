@@ -5,99 +5,99 @@ apply plugin: 'kotlin-android-extensions'
 ext.artifact = 'preferoutines-extras'
 
 android {
-  compileSdkVersion targetSdk
+    compileSdkVersion targetSdk
 
-  defaultConfig {
-    minSdkVersion minSdk
-    targetSdkVersion targetSdk
-    versionName libraryVersion
+    defaultConfig {
+        minSdkVersion minSdk
+        targetSdkVersion targetSdk
+        versionName libraryVersion
 
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    consumerProguardFiles 'consumer-rules.pro'
-  }
-
-  signingConfigs {
-    release {
-      storeFile file(keystore)
-      storePassword keystorePassword
-      keyAlias keyAlias
-      keyPassword keyPassword
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
-  }
 
-  buildTypes {
-    release {
-      signingConfig signingConfigs.release
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    signingConfigs {
+        release {
+            storeFile file(keystore)
+            storePassword keystorePassword
+            keyAlias keyAlias
+            keyPassword keyPassword
+        }
     }
-  }
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
 
-    // Needed to use experimental @UseExperimental annotation:
-    freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
-  }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+
+        // Needed to use experimental @UseExperimental annotation:
+        freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
+    }
 }
 
 apply from: 'publish.gradle'
 
 dependencies {
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-  api project(':preferoutines')
-  api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2'
+    api project(':preferoutines')
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2'
 
-  testImplementation 'junit:junit:4.12'
-  testImplementation 'org.mockito:mockito-inline:2.28.2'
-  testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
-  testImplementation project(':test')
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-inline:2.28.2'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
+    testImplementation project(':test')
 
-  androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-  androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
 // TODO WORKAROUND: Get this to work in its own file
 //region Compatibility
 configurations {
-  baseline
-  latest
+    baseline
+    latest
 }
 
 dependencies {
-  baseline("drewhamilton.preferoutines:$artifact:$compatibleVersion") {
-    transitive false
-    force true
-    exclude module: 'preferoutines'
-  }
-  latest(project(path: ":$project.name", configuration: 'releaseRuntimeElements')) {
-    exclude module: 'preferoutines'
-  }
+    baseline("drewhamilton.preferoutines:$artifact:$compatibleVersion") {
+        transitive false
+        force true
+        exclude module: 'preferoutines'
+    }
+    latest(project(path: ":$project.name", configuration: 'releaseRuntimeElements')) {
+        exclude module: 'preferoutines'
+    }
 }
 
 apply plugin: 'me.champeau.gradle.japicmp'
 //noinspection UnnecessaryQualifiedReference
 task japicmp(type: me.champeau.gradle.japicmp.JapicmpTask) {
-  oldClasspath = configurations.baseline.incoming.artifactView { config ->
-    config.attributes { container ->
-      container.attribute(Attribute.of("artifactType", String.class), "jar")
-    }
-  }.artifacts.artifactFiles
+    oldClasspath = configurations.baseline.incoming.artifactView { config ->
+        config.attributes { container ->
+            container.attribute(Attribute.of("artifactType", String.class), "jar")
+        }
+    }.artifacts.artifactFiles
 
-  newClasspath = configurations.latest.incoming.artifactView { config ->
-    config.attributes { container ->
-      container.attribute(Attribute.of("artifactType", String.class), "jar")
-    }
-  }.artifacts.artifactFiles
+    newClasspath = configurations.latest.incoming.artifactView { config ->
+        config.attributes { container ->
+            container.attribute(Attribute.of("artifactType", String.class), "jar")
+        }
+    }.artifacts.artifactFiles
 
-  onlyBinaryIncompatibleModified true
-  failOnModification failIfIncompatible
-  txtOutputFile = file("$buildDir/reports/japi.txt")
+    onlyBinaryIncompatibleModified true
+    failOnModification failIfIncompatible
+    txtOutputFile = file("$buildDir/reports/japi.txt")
 }
 
 check.dependsOn(japicmp)
