@@ -2,7 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-ext.artifact = 'preferoutines'
+ext {
+    artifact = 'preferoutines'
+    bintrayName = 'Preferoutines'
+    libraryName = 'Preferoutines'
+
+    libraryDescription = 'A collection of extension methods for accessing Android SharedPreferences in Kotlin Coroutines.'
+}
 
 android {
     compileSdkVersion targetSdk
@@ -44,8 +50,6 @@ android {
         freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
     }
 }
-
-apply from: 'publish.gradle'
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

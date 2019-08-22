@@ -21,6 +21,8 @@ buildscript {
     }
 }
 
+apply from: 'publish.gradle'
+
 allprojects { project ->
     repositories {
         google()
