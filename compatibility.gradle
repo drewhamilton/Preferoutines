@@ -48,6 +48,16 @@ subprojects { subproject ->
                 }
             }.artifacts.artifactFiles
 
+            // Explicitly exclude Kotlin internal classes:
+            classExcludes = [
+                    'drewhamilton.preferoutines.CoroutineAllPreferenceListener',
+                    'drewhamilton.preferoutines.CoroutinePreferenceListener',
+                    'drewhamilton.preferoutines.CoroutineSinglePreferenceChangeListener',
+                    'drewhamilton.preferoutines.CoroutineSinglePreferenceContainsListener',
+                    'drewhamilton.preferoutines.CoroutineSinglePreferenceListener',
+                    'drewhamilton.preferoutines.SinglePreferenceListener'
+            ]
+
             onlyBinaryIncompatibleModified true
             failOnModification failIfIncompatible
             txtOutputFile = file("$buildDir/reports/japi.txt")
