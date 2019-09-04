@@ -88,6 +88,10 @@ subprojects { subproject ->
             key = bintrayKey
 
             configurations = ['archives']
+
+            dryRun = false
+            publish = true
+            override = false
             pkg {
                 repo = bintrayRepo
                 name = bintrayName
@@ -95,9 +99,6 @@ subprojects { subproject ->
                 websiteUrl = siteUrl
                 vcsUrl = gitUrl
                 licenses = allLicenses
-                dryRun = false
-                publish = true
-                override = false
                 publicDownloadNumbers = true
                 version {
                     desc = libraryDescription
