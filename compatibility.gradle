@@ -10,7 +10,7 @@ buildscript {
 }
 
 def compatibleVersion = '0.3.0'
-def failIfIncompatible = true
+def failIfIncompatible = false
 subprojects { subproject ->
     afterEvaluate {
         if (!subproject.hasProperty('artifact'))
@@ -47,6 +47,16 @@ subprojects { subproject ->
                     container.attribute(Attribute.of("artifactType", String.class), "jar")
                 }
             }.artifacts.artifactFiles
+
+            // Explicitly exclude Kotlin internal classes:
+            classExcludes = [
+                    'drewhamilton.preferoutines.CoroutineAllPreferenceListener',
+                    'drewhamilton.preferoutines.CoroutinePreferenceListener',
+                    'drewhamilton.preferoutines.CoroutineSinglePreferenceChangeListener',
+                    'drewhamilton.preferoutines.CoroutineSinglePreferenceContainsListener',
+                    'drewhamilton.preferoutines.CoroutineSinglePreferenceListener',
+                    'drewhamilton.preferoutines.SinglePreferenceListener'
+            ]
 
             onlyBinaryIncompatibleModified true
             failOnModification failIfIncompatible

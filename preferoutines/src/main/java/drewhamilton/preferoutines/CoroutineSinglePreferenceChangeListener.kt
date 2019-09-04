@@ -1,12 +1,13 @@
 package drewhamilton.preferoutines
 
 import android.content.SharedPreferences
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.ProducerScope
 
+@ExperimentalCoroutinesApi
 internal class CoroutineSinglePreferenceChangeListener<T> constructor(
     key: String,
-    channel: SendChannel<T>,
+    channel: ProducerScope<T>,
     private val defaultValue: T,
     private inline val getPreference: SharedPreferences.(String, T) -> T
 ) : CoroutineSinglePreferenceListener<T>(key, channel) {
