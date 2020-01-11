@@ -16,6 +16,7 @@ ext {
             ]
     ]
 }
+apply from: '../publish.gradle'
 
 android {
     compileSdkVersion targetSdk
@@ -62,7 +63,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     api project(':preferoutines')
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-inline:2.28.2'

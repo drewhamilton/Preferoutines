@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.observe.integerValue
 import kotlinx.android.synthetic.main.observe.stringValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.collect
@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
-@UseExperimental(FlowPreview::class)
+@UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : AppCompatActivity() {
 
     private val job = SupervisorJob()

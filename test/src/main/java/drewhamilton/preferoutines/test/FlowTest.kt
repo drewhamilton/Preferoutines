@@ -1,7 +1,6 @@
 package drewhamilton.preferoutines.test
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
@@ -27,7 +26,6 @@ abstract class FlowTest {
         testScope = CoroutineScope(testContext)
     }
 
-    @UseExperimental(ObsoleteCoroutinesApi::class)
     @After
     fun cancelAllJobs() {
         for (testCollector in testCollectors) {
@@ -37,8 +35,6 @@ abstract class FlowTest {
         testContext.cancel()
     }
 
-    @FlowPreview
-    @UseExperimental(ObsoleteCoroutinesApi::class)
     protected fun <T> Flow<T>.test(): TestCollector<T> {
         val testCollector = TestCollector<T>()
         testCollector.deferred = testScope.async(testContext) {
