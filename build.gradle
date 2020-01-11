@@ -42,7 +42,7 @@ allprojects { project ->
 }
 
 ext {
-    libraryVersion = '0.4.x'
+    libraryVersion = '0.4.1'
 
     targetSdk = 28
     minSdk = 14

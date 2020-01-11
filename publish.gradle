@@ -86,7 +86,7 @@ bintray {
 
     configurations = ['archives']
 
-    dryRun = true
+    dryRun = false
     publish = true
     override = false
     pkg {
