@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import drewhamilton.preferoutines.extras.test.TestEnum
 import drewhamilton.preferoutines.test.BasePreferoutinesTest
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
@@ -36,7 +36,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
     //endregion
 
     //region Flow
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getNonNullStringFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getString, SharedPreferences::getNonNullStringFlow,
@@ -44,7 +44,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
         )
     }
 
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getNonNullStringFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getString, SharedPreferences::getNonNullStringFlow,
@@ -52,7 +52,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
         )
     }
 
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getNonNullStringFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getString, SharedPreferences::getNonNullStringFlow,
@@ -60,7 +60,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
         )
     }
 
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getNonNullStringSetFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getStringSet, SharedPreferences::getNonNullStringSetFlow,
@@ -68,7 +68,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
         )
     }
 
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getNonNullStringSetFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getStringSet, SharedPreferences::getNonNullStringSetFlow,
@@ -76,7 +76,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
         )
     }
 
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getNonNullStringSetFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getStringSet, SharedPreferences::getNonNullStringSetFlow,
@@ -84,7 +84,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
         )
     }
 
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getEnumFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect<TestEnum?, String?>(
             SharedPreferences::getString, { key, defaultValue -> getEnumFlow(key, defaultValue) },
@@ -93,7 +93,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
         )
     }
 
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getEnumFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate<TestEnum?, String?>(
             SharedPreferences::getString, { key, defaultValue -> getEnumFlow(key, defaultValue) },
@@ -102,7 +102,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
         )
     }
 
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getEnumFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel<TestEnum?, String?>(
             SharedPreferences::getString, { key, defaultValue -> getEnumFlow(key, defaultValue) },
@@ -111,7 +111,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
         )
     }
 
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getNonNullEnumFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getString, SharedPreferences::getNonNullEnumFlow,
@@ -120,7 +120,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
         )
     }
 
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getNonNullEnumFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getString, SharedPreferences::getNonNullEnumFlow,
@@ -129,7 +129,7 @@ class PreferoutinesExtrasTest : BasePreferoutinesTest() {
         )
     }
 
-    @FlowPreview
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun `getNonNullEnumFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getString, SharedPreferences::getNonNullEnumFlow,

@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.timeout
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -28,7 +27,6 @@ abstract class BasePreferoutinesTest : FlowTest() {
         whenever(mockSharedPreferencesEditor.commit()).thenReturn(true)
     }
 
-    @FlowPreview
     protected fun <T, P> testGetPreferenceFlow_emitsCurrentValueOnCollect(
         getPreference: SharedPreferences.(String, P) -> P,
         getPreferenceFlow: SharedPreferences.(String, T) -> Flow<T>,
@@ -52,7 +50,6 @@ abstract class BasePreferoutinesTest : FlowTest() {
         }
     }
 
-    @FlowPreview
     protected fun <T, P> testGetPreferenceFlow_emitsOnListenerUpdate(
         getPreference: SharedPreferences.(String, P) -> P,
         getPreferenceFlow: SharedPreferences.(String, T) -> Flow<T>,
@@ -78,7 +75,6 @@ abstract class BasePreferoutinesTest : FlowTest() {
         testCollector.assert { valueCount(2) }
     }
 
-    @FlowPreview
     protected fun <T, P> testGetPreferenceFlow_unregistersListenerOnCancel(
         getPreference: SharedPreferences.(String, P) -> P,
         getPreferenceFlow: SharedPreferences.(String, T) -> Flow<T>,
