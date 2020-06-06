@@ -53,9 +53,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
-
-        // Needed to use experimental @UseExperimental annotation:
-        freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
+        freeCompilerArgs += ['-Xopt-in=kotlin.RequiresOptIn']
     }
 }
 
