@@ -15,7 +15,7 @@ import org.junit.Test
 class PreferoutinesTest : BasePreferoutinesTest() {
 
     //region Flow
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getAllFlow emits current value on collect`() {
         val testValue = mutableMapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
         whenever(mockSharedPreferences.all).thenReturn(testValue)
@@ -32,7 +32,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         }
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getAllFlow emits on listener update`() {
         val testValue = mutableMapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
         whenever(mockSharedPreferences.all).thenReturn(testValue)
@@ -51,7 +51,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         testCollector.assert { valueCount(2) }
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getAllFlow unregisters listener on cancel`() {
         val testValue = mutableMapOf(Pair("Key 1", "Value 1"), Pair("Key 2", 3), Pair("Key 3", null))
         whenever(mockSharedPreferences.all).thenReturn(testValue)
@@ -69,7 +69,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         verify(mockSharedPreferences, timeout(100)).unregisterOnSharedPreferenceChangeListener(listenerCaptor.lastValue)
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getStringFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getString, SharedPreferences::getStringFlow,
@@ -77,7 +77,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getStringFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getString, SharedPreferences::getStringFlow,
@@ -85,7 +85,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getStringFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getString, SharedPreferences::getStringFlow,
@@ -93,7 +93,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getStringSetFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getStringSet, SharedPreferences::getStringSetFlow,
@@ -101,7 +101,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getStringSetFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getStringSet, SharedPreferences::getStringSetFlow,
@@ -109,7 +109,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getStringSetFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getStringSet, SharedPreferences::getStringSetFlow,
@@ -117,7 +117,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getIntFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getInt, SharedPreferences::getIntFlow,
@@ -125,7 +125,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getIntFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getInt, SharedPreferences::getIntFlow,
@@ -133,7 +133,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getIntFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getInt, SharedPreferences::getIntFlow,
@@ -141,7 +141,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getLongFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getLong, SharedPreferences::getLongFlow,
@@ -149,7 +149,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getLongFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getLong, SharedPreferences::getLongFlow,
@@ -157,7 +157,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getLongFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getLong, SharedPreferences::getLongFlow,
@@ -165,7 +165,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getFloatFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getFloat, SharedPreferences::getFloatFlow,
@@ -173,7 +173,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getFloatFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getFloat, SharedPreferences::getFloatFlow,
@@ -181,7 +181,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getFloatFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getFloat, SharedPreferences::getFloatFlow,
@@ -189,7 +189,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getBooleanFlow emits current value on collect`() {
         testGetPreferenceFlow_emitsCurrentValueOnCollect(
             SharedPreferences::getBoolean, SharedPreferences::getBooleanFlow,
@@ -197,7 +197,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getBooleanFlow emits on listener update`() {
         testGetPreferenceFlow_emitsOnListenerUpdate(
             SharedPreferences::getBoolean, SharedPreferences::getBooleanFlow,
@@ -205,7 +205,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getBooleanFlow unregisters listener on cancel`() {
         testGetPreferenceFlow_unregistersListenerOnCancel(
             SharedPreferences::getBoolean, SharedPreferences::getBooleanFlow,
@@ -213,7 +213,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         )
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getContainsFlow emits current value on collect`() {
         val testKey = "Test key"
         val testValue = true
@@ -231,7 +231,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         }
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getContainsFlow emits on listener update`() {
         val testKey = "Test key"
         val testValue = true
@@ -251,7 +251,7 @@ class PreferoutinesTest : BasePreferoutinesTest() {
         testCollector.assert { valueCount(2) }
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun `getContainsFlow unregisters listener on cancel`() {
         val testKey = "Test key"
         val testValue = true

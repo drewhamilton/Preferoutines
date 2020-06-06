@@ -19,7 +19,7 @@ abstract class FlowTest {
 
     private val testCollectors: MutableCollection<TestCollector<*>> = mutableSetOf()
 
-    @UseExperimental(ObsoleteCoroutinesApi::class)
+    @OptIn(ObsoleteCoroutinesApi::class)
     @Before
     fun setUpTestScope() {
         testContext = newSingleThreadContext("Test context")

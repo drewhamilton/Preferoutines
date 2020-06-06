@@ -120,7 +120,7 @@ private fun <T> SharedPreferences.getPreferenceFlow(
     registerCoroutinePreferenceListener(listener)
 }
 
-@UseExperimental(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 private suspend fun <T> SharedPreferences.registerCoroutinePreferenceListener(listener: CoroutinePreferenceListener<T>) {
     registerOnSharedPreferenceChangeListener(listener)
     listener.channel.awaitClose {
