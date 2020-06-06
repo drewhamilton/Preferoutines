@@ -1,0 +1,5 @@
+public final class drewhamilton/preferoutines/extras/PreferoutinesExtrasKt {
+	public static final fun getNonNullStringFlow (Landroid/content/SharedPreferences;Ljava/lang/String;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun getNonNullStringSetFlow (Landroid/content/SharedPreferences;Ljava/lang/String;Ljava/util/Set;)Lkotlinx/coroutines/flow/Flow;
+}
+
