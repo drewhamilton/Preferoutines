@@ -1,5 +1,5 @@
 # Preferoutines
-[ ![Build status](https://travis-ci.org/drewhamilton/Preferoutines.svg?branch=master) ](https://travis-ci.org/drewhamilton/Preferoutines)
+[![](https://github.com/drewhamilton/Preferoutines/workflows/CI/badge.svg?branch=master)](https://github.com/drewhamilton/Preferoutines/actions?query=workflow%3ACI+branch%3Amaster)
 
 A collection of extension methods for accessing Android SharedPreferences in Kotlin coroutines.
 
