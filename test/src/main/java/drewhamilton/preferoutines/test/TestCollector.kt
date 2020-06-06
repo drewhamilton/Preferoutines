@@ -20,7 +20,7 @@ class TestCollector<T> {
 
         fun values(vararg expected: T) {
             assertEquals(expected.size, values.size)
-            for (i in 0 until expected.size) {
+            for (i in expected.indices) {
                 assertEquals(expected[i], values[i])
             }
         }
