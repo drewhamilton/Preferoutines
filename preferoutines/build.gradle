@@ -54,6 +54,11 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
         freeCompilerArgs += ['-Xopt-in=kotlin.RequiresOptIn']
     }
+
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
 }
 
 dependencies {
@@ -65,4 +70,8 @@ dependencies {
     testImplementation deps.junit
     testImplementation deps.mockito
     testImplementation deps.mockitoKotlin
+
+    androidTestImplementation deps.androidXTest
+    androidTestImplementation deps.androidXTestRunner
+    androidTestImplementation deps.coroutinesTest
 }
